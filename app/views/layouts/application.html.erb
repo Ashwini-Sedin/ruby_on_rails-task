@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Management</title>
+
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= stylesheet_link_tag "application", media: "all" %>
+</head>
+
+<body>
+
+  <%= render "shared/header" %>
+
+  <div class="container">
+    <%= yield %>
+  </div>
+
+  <%= render "shared/footer" %>
+
+</body>
+</html>

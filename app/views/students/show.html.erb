@@ -1,0 +1,27 @@
+<div class="card">
+
+<h2>Student Details</h2>
+
+<p><strong>Name:</strong> <%= @student.name %></p>
+<p><strong>Email:</strong> <%= @student.email %></p>
+<p><strong>Age:</strong> <%= @student.age %></p>
+<p><strong>Course:</strong> <%= @student.course %></p>
+<p><strong>City:</strong> <%= @student.city %></p>
+<p><strong>Marks:</strong> <%= @student.marks %></p>
+
+<p>
+  <strong>Result:</strong>
+
+  <% if @student.result == "pass" %>
+    <span style="color:green;font-weight:bold;">
+      Pass
+    </span>
+  <% else %>
+    <span style="color:red;font-weight:bold;">
+      Fail
+    </span>
+  <% end %>
+
+</p>
+
+</div>

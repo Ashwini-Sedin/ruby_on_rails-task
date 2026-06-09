@@ -1,0 +1,62 @@
+<h2>Students List</h2>
+
+<div class="search-filter">
+
+<%= form_with url: students_path,
+method: :get,
+local: true do %>
+<%= text_field_tag :search,
+  
+  params[:search],
+  placeholder:"Search"%>
+  <%= select_tag :course,
+  options_for_select(
+    ["Ruby","Rails","React","Java"],
+    params[:course]
+  ),
+  include_blank:"All courses"%>
+  <%= submit_tag "Filter"%>
+<% end %>
+
+<br>
+<table border="1">
+
+<tr>
+  <th>Name</th>
+  <th>Email</th>
+  <th>Age</th>
+  <th>Course</th>
+  <th>City</th>
+  <th>Actions</th>
+</tr>
+
+<% @students.each do |student| %>
+
+<tr>
+  <td><%= student.name %></td>
+  <td><%= student.email %></td>
+  <td><%= student.age %></td>
+  <td><%= student.course %></td>
+  <td><%= student.city %></td>
+
+  <td>
+    <%= link_to "View", student %>
+
+    <%= link_to "Edit",
+        edit_student_path(student) %>
+
+    <%= link_to "Delete",
+        student,
+        method: :delete,
+        data: {
+          confirm: "Are you sure?"
+        }
+         %>
+  </td>
+</tr>
+
+<% end %>
+
+</table>
+  
+  

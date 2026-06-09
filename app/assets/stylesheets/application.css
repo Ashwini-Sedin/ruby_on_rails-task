@@ -1,0 +1,183 @@
+
+
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f9;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 90%;
+  margin: auto;
+  padding: 20px;
+}
+
+/* Header */
+.header {
+  background: #2c3e50;
+  color: white;
+  padding: 20px;
+}
+
+.header h1 {
+  margin: 0;
+}
+
+.navbar {
+  margin-top: 10px;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  margin-right: 20px;
+  font-weight: bold;
+}
+
+.navbar a:hover {
+  color: #f1c40f;
+}
+
+
+.footer {
+  background: #2c3e50;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  margin-top: 30px;
+}
+
+
+.card {
+  background: white;
+  padding: 20px;
+  margin: 15px 0;
+  border-radius: 8px;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+}
+
+
+.dashboard {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.dashboard-card {
+  background: white;
+  width: 220px;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+}
+
+.dashboard-card h2 {
+  margin: 0;
+  color: #0e1921;
+}
+
+
+.form-container {
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+  width: 50%;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.btn {
+  background: #c3d4df;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #2980b9;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+table th {
+  background: #bdc4c8;
+  color: rgb(32, 2, 2);
+  padding: 12px;
+}
+
+table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+table tr:hover {
+  background: #f2f2f2;
+}
+
+/* Action Buttons */
+.view-btn {
+  background: #27ae60;
+  color: white;
+  padding: 6px 10px;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.edit-btn {
+  background: #f39c12;
+  color: white;
+  padding: 6px 10px;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.delete-btn {
+  background: #e74c3c;
+  color: white;
+  padding: 6px 10px;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+
+.search-filter {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+
+.error-box {
+  background: #ffe6e6;
+  color: #d63031;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
