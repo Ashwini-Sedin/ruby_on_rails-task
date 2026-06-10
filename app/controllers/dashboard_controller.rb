@@ -7,3 +7,4 @@ class DashboardController < ApplicationController
     @java_students=Student.where(course:"Java").count
   end
 end
+                 

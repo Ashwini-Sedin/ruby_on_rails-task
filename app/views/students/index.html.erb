@@ -44,14 +44,12 @@ local: true do %>
 
     <%= link_to "Edit",
         edit_student_path(student) %>
-
-    <%= link_to "Delete",
-        student,
-        method: :delete,
-        data: {
-          confirm: "Are you sure?"
-        }
-         %>
+     
+    <%= link_to "Delete", student_path(student),
+    data: {
+      "turbo_method": :delete,
+      "turbo_confirm": "Are you sure?"
+    } %>
   </td>
 </tr>
 
