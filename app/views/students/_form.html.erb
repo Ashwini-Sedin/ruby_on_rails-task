@@ -33,6 +33,17 @@
   <%= f.label :course %>
   <%= f.select :course, ["Ruby", "Rails", "React", "Java"] %>
 </div>
+
+    <% if current_user.admin? %>
+    <div class="form-group">
+      <%= f.label :teacher_id, "Assign Teacher" %>
+      <%= f.collection_select :teacher_id,
+          User.where(role: "teacher"),
+          :id,
+          :name,
+          prompt: "Select Teacher" %>
+    </div>
+  <% end %>
    <div class="form-group">
     <%= f.label :marks %>
     <%= f.number_field :marks %>

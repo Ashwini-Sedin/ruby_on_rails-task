@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
+  get "teachers/index"
+  devise_for :users
   get "dashboard/index"
 
   resources :students
+  resources :teachers, only: [ :index ]
   get "dashboard", to: "dashboard#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

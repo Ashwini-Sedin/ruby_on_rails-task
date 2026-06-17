@@ -1,29 +1,61 @@
 <h1>DASHBOARD</h1>
-<div class="dashboard">
-  <div class=dashboard-card>
-    <h2>
-    <%= @total_students %></h2>
-    <p>Total students</p>
-   </div>
-    <div class=dashboard-card>
-    <h2>
-    <%= @rails_students %></h2>
-    <p>Rails students</p>
-   </div>
-    <div class=dashboard-card>
-    <h2>
-    <%= @ruby_students %></h2>
-    <p>Ruby students</p>
 
-   </div>
-    <div class=dashboard-card>
-    <h2>
-    <%= @react_students %></h2>
-    <p>React students</p>
-   </div>
-    <div class=dashboard-card>
-    <h2>
-    <%= @java_students %></h2>
-    <p>Java students</p>
-   </div>
-</div>
+<% if current_user.admin? %>
+
+  <div class="dashboard">
+    <h2>Admin Dashboard</h2>
+
+    <div class="dashboard-card">
+      <h2><%= @total_students %></h2>
+      <p>Total Students</p>
+    </div>
+
+    <div class="dashboard-card">
+      <h2><%= @total_teachers %></h2>
+      <p>Total Teachers</p>
+    </div>
+
+    <h3>Students Per Teacher</h3>
+
+    <ul>
+      <% @students_per_teacher.each do |teacher| %>
+        <li>
+          <%= teacher.name %> :
+          <%= teacher.students.count %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+<% else %>
+
+  <div class="dashboard">
+    <h2>Teacher Dashboard</h2>
+
+    <div class="dashboard-card">
+      <h2><%= @total_students %></h2>
+      <p>Total Students</p>
+    </div>
+
+    <div class="dashboard-card">
+      <h2><%= @ruby_students %></h2>
+      <p>Ruby Students</p>
+    </div>
+
+    <div class="dashboard-card">
+      <h2><%= @rails_students %></h2>
+      <p>Rails Students</p>
+    </div>
+
+    <div class="dashboard-card">
+      <h2><%= @react_students %></h2>
+      <p>React Students</p>
+    </div>
+
+    <div class="dashboard-card">
+      <h2><%= @java_students %></h2>
+      <p>Java Students</p>
+    </div>
+  </div>
+    
+    <% end %>

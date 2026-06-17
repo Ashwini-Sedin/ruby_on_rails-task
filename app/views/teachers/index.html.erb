@@ -1,0 +1,21 @@
+<h1>Teachers List</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Students Count</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @teachers.each do |teacher| %>
+      <tr>
+        <td><%= teacher.name %></td>
+        <td><%= teacher.email %></td>
+        <td><%= teacher.students.count %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
