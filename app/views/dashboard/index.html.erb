@@ -35,27 +35,15 @@
     <div class="dashboard-card">
       <h2><%= @total_students %></h2>
       <p>Total Students</p>
+      <% @course_counts.each do|course, count| %>
+      <div>
+      <%= course %> Students: <%= count %>
+      </div>
+      <% end %>
+
     </div>
 
-    <div class="dashboard-card">
-      <h2><%= @ruby_students %></h2>
-      <p>Ruby Students</p>
-    </div>
 
-    <div class="dashboard-card">
-      <h2><%= @rails_students %></h2>
-      <p>Rails Students</p>
-    </div>
-
-    <div class="dashboard-card">
-      <h2><%= @react_students %></h2>
-      <p>React Students</p>
-    </div>
-
-    <div class="dashboard-card">
-      <h2><%= @java_students %></h2>
-      <p>Java Students</p>
-    </div>
   </div>
     
     <% end %>

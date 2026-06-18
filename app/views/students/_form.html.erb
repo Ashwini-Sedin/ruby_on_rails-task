@@ -38,7 +38,7 @@
     <div class="form-group">
       <%= f.label :teacher_id, "Assign Teacher" %>
       <%= f.collection_select :teacher_id,
-          User.where(role: "teacher"),
+          User.teacher,
           :id,
           :name,
           prompt: "Select Teacher" %>
