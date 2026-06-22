@@ -6,7 +6,7 @@ class UsersController < ApplicationController
     @users =
       case params[:role]
       when "teacher"
-        User.teacher.includes(:students)
+        User.teacher
       when "student"
         User.student
       else

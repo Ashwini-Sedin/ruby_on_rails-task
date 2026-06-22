@@ -1,5 +1,5 @@
 class Student < ApplicationRecord
-  belongs_to :teacher, class_name: "User"
+  belongs_to :teacher, class_name: "User", foreign_key: :teacher_id, counter_cache: true
 
   scope :search, ->(term) {
     where(

@@ -4,7 +4,7 @@ class DashboardController < ApplicationController
        @total_students=Student.count
        @total_teachers= User.teacher.count
        @students_per_teacher = User.teacher
-                                .includes(:students)
+
     else
       students = current_user.students
 
