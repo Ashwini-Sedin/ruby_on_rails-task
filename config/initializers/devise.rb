@@ -9,24 +9,20 @@
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
-
-
-
-
   config.jwt do |jwt|
-     jwt.secret = Rails.application.credentials.secret_key_base
-     jwt.dispatch_requests = [
-      ['POST', %r{^/users/sign_in$}]
-     ]
-
+    jwt.secret = ENV['DEVISE_JWT_SECRET_KEY'] || Rails.application.credentials.jwt_secret_key || Rails.application.credentials.secret_key_base
+    jwt.dispatch_requests = [
+      ['POST', %r{^/api/v1/login(\.json)?$}],
+      ['POST', %r{^/users/sign_in(\.json)?$}]
+    ]
     jwt.revocation_requests = [
-      ['DELETE', %r{^/users/sign_out$}]
-     ]
-       jwt.request_formats = {
-       user: [:json]
-      }
-
-  jwt.expiration_time = 1.day.to_i
+      ['DELETE', %r{^/api/v1/logout(\.json)?$}],
+      ['DELETE', %r{^/users/sign_out(\.json)?$}]
+    ]
+    jwt.request_formats = {
+      user: [:json]
+    }
+    jwt.expiration_time = 1.day.to_i
   end
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing
@@ -334,16 +330,7 @@ Devise.setup do |config|
   # config.sign_in_after_change_password = true
 
   # ==> JWT Configuration
-  config.jwt do |jwt|
-    jwt.secret = ENV['DEVISE_JWT_SECRET_KEY'] || Rails.application.credentials.jwt_secret_key || '9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a10'
-    jwt.dispatch_requests = [
-      ['POST', %r{^/users/sign_in(\.json)?$}]
-    ]
-    jwt.revocation_requests = [
-      ['DELETE', %r{^/users/sign_out(\.json)?$}]
-    ]
-    jwt.expiration_time = 1.day.to_i
-  end
+  # Configuration merged into the main jwt block above
 
   config.navigational_formats = [:html, :turbo_stream]
 end

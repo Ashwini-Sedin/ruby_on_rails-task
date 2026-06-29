@@ -1,22 +1,27 @@
 Rails.application.routes.draw do
+   devise_for :users
   get "users/index"
-
-  devise_for :users
-  # get "dashboard/index"
-  get "dashboard", to: "dashboard#index"
+  
+  get "dashboard/index"
 
   resources :students
-  resources :teachers, controller: "users" do
-    resources :students, only: [ :index, :create ]
-  end
-  root to: "dashboard#index"
-
-
- 
-
-
+  resources :users, only: [ :index ]
+  get "dashboard", to: "dashboard#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  #Api routes
+  namespace :api do
+    namespace :v1 do
+       devise_scope :user do
+       post "login", to: "sessions#create"
+       delete "logout", to: "sessions#destroy"
+    end
+      resources :teachers, except: [:new, :edit] do
+        resources :students, only: [:index, :create]
+      end
 
+      resources :students, except: [:new, :edit]
+    end
+  end
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
@@ -26,5 +31,5 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-
+  root to: "dashboard#index"
 end
