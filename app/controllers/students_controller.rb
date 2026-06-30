@@ -1,68 +1,91 @@
+
 class StudentsController < ApplicationController
-  before_action :set_student, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_student, only: %i[show edit update destroy remove_profile_photo remove_document]
+
   def index
-    @students = Student.all
+    @students =
+      if current_user.admin?
+        Student.all
+      else
+        current_user.students
+      end
 
-    if params[:search].present?
-      @students = @students.where(
-        "name LIKE ? OR email LIKE ?",
-        "%#{params[:search]}%",
-        "%#{params[:search]}%"
-      )
-    end
-
-    if params[:course].present?
-      @students = @students.where(course: params[:course])
-    end
+    @students = @students.search(params[:search]) if params[:search].present?
+    @students = @students.by_course(params[:course]) if params[:course].present?
+    @students = @students.where(course: params[:course]) if params[:course].present?
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @student = Student.new
   end
 
-  def create
-    @student = Student.new(student_params)
 
-    if @student.save
-      redirect_to students_path
+  def create
+    result = StudentRegistrationService.call(
+      student_params.merge(teacher_id: current_user.id)
+    )
+
+    if result[:success]
+      student = result[:student]
+
+      ProfilePhotoService.upload(student, params[:student][:profile_photo])
+      StudentDocumentService.upload(student, params[:student][:documents])
+
+      redirect_to students_path, notice: "Student created successfully."
     else
-      render :new
+      @student = Student.new(student_params)
+      @student.errors.add(:base, result[:errors].join(", "))
+      render :new, status: :unprocessable_entity
     end
   end
 
-  def edit
-  end
+  def edit; end
+
 
   def update
-    if @student.update(student_params)
-      redirect_to students_path
+    if @student.update(student_params.except(:profile_photo, :documents))
+      ProfilePhotoService.upload(@student, params[:student][:profile_photo])
+      StudentDocumentService.upload(@student, params[:student][:documents])
+
+      redirect_to students_path, notice: "Student updated successfully."
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
     @student.destroy
-    redirect_to students_path
+    redirect_to students_path, notice: "Student deleted successfully"
+  end
+  def remove_profile_photo
+    ProfilePhotoService.delete(@student)
+    redirect_to edit_student_path(@student),
+                notice: "Profile photo deleted successfully."
+  end
+
+  def remove_document
+    StudentDocumentService.delete(@student, params[:attachment_id])
+    redirect_to edit_student_path(@student),
+                notice: "Document deleted successfully."
   end
 
   private
 
   def set_student
-    @student = Student.find(params[:id])
+    @student =
+      if current_user.admin?
+        Student.find(params[:id])
+      else
+        current_user.students.find(params[:id])
+      end
   end
 
   def student_params
-    params.require(:student).permit(
-      :name,
-      :email,
-      :age,
-      :course,
-      :city,
-      :marks
-    )
+    permitted = [:name, :email, :age, :course, :city, :marks, :profile_photo, { documents: [] }]
+    permitted << :teacher_id if current_user.admin?
+
+    params.require(:student).permit(permitted)
   end
 end

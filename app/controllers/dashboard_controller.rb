@@ -1,9 +1,16 @@
 class DashboardController < ApplicationController
   def index
-    @total_students=Student.count
-    @ruby_students=Student.where(course: "Ruby").count
-    @rails_students=Student.where(course: "Rails").count
-    @react_students=Student.where(course: "React").count
-    @java_students=Student.where(course: "Java").count
+    if current_user.admin?
+       @total_students=Student.count
+       @total_teachers= User.teacher.count
+       @students_per_teacher = User.teacher
+
+    else
+      students = current_user.students
+
+      @total_students = students.count
+
+      @course_counts = students.group(:course).count
+    end
   end
 end

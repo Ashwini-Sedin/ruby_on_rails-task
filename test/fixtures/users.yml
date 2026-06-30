@@ -1,0 +1,9 @@
+one:
+  name: "Teacher One"
+  email: "teacher1@example.com"
+  role: "teacher"
+
+two:
+  name: "Teacher Two"
+  email: "teacher2@example.com"
+  role: "teacher"
