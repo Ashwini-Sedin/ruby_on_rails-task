@@ -4,7 +4,14 @@ Rails.application.routes.draw do
   
   get "dashboard/index"
 
-  resources :students
+  resources :students do
+    member do
+      delete :remove_profile_photo
+    end
+    delete "remove_document/:attachment_id",
+     to: "students#remove_document", 
+     as: :remove_document
+  end
   resources :users, only: [ :index ]
   get "dashboard", to: "dashboard#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

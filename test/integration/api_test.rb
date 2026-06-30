@@ -41,7 +41,7 @@ class ApiTest < ActionDispatch::IntegrationTest
   # ================= TEACHERS API TESTS =================
 
   test "GET /teachers.json should return all teachers with valid JWT" do
-    get teachers_path(format: :json), headers: auth_headers(@teacher1)
+    get api_v1_teachers_path(format: :json), headers: auth_headers(@teacher1)
     assert_response :success
 
     json_response = JSON.parse(response.body)
@@ -52,12 +52,12 @@ class ApiTest < ActionDispatch::IntegrationTest
   end
 
   test "GET /teachers.json without JWT should return 401 Unauthorized" do
-    get teachers_path(format: :json)
+    get api_v1_teachers_path(format: :json)
     assert_response :unauthorized
   end
 
   test "GET /teachers/:id.json should return teacher details with students" do
-    get teacher_path(@teacher1, format: :json), headers: auth_headers(@teacher1)
+    get api_v1_teacher_path(@teacher1, format: :json), headers: auth_headers(@teacher1)
     assert_response :success
 
     json_response = JSON.parse(response.body)
@@ -71,7 +71,7 @@ class ApiTest < ActionDispatch::IntegrationTest
 
   test "POST /teachers.json should create a teacher" do
     assert_difference "User.count", 1 do
-      post teachers_path(format: :json), params: {
+      post api_v1_teachers_path(format: :json), params: {
         name: "Professor Xavier",
         email: "xavier@example.com",
         password: "telepathicpass"
@@ -85,7 +85,7 @@ class ApiTest < ActionDispatch::IntegrationTest
   end
 
   test "PUT /teachers/:id.json should update teacher details" do
-    put teacher_path(@teacher1, format: :json), params: {
+    put api_v1_teacher_path(@teacher1, format: :json), params: {
       name: "Johnathan Doe"
     }, headers: auth_headers(@teacher1)
     assert_response :ok
@@ -97,7 +97,7 @@ class ApiTest < ActionDispatch::IntegrationTest
 
   test "DELETE /teachers/:id.json should delete a teacher" do
     assert_difference "User.count", -1 do
-      delete teacher_path(@teacher1, format: :json), headers: auth_headers(@teacher1)
+      delete api_v1_teacher_path(@teacher1, format: :json), headers: auth_headers(@teacher1)
     end
     assert_response :no_content
   end
@@ -105,7 +105,7 @@ class ApiTest < ActionDispatch::IntegrationTest
   # ================= STUDENTS API TESTS =================
 
   test "GET /students.json should return all students" do
-    get students_path(format: :json), headers: auth_headers(@teacher1)
+    get api_v1_students_path(format: :json), headers: auth_headers(@teacher1)
     assert_response :success
 
     json_response = JSON.parse(response.body)
@@ -116,7 +116,7 @@ class ApiTest < ActionDispatch::IntegrationTest
   end
 
   test "GET /students/:id.json should return student details" do
-    get student_path(@student1, format: :json), headers: auth_headers(@teacher1)
+    get api_v1_student_path(@student1, format: :json), headers: auth_headers(@teacher1)
     assert_response :success
 
     json_response = JSON.parse(response.body)
@@ -128,7 +128,7 @@ class ApiTest < ActionDispatch::IntegrationTest
 
   test "POST /students.json should create a student" do
     assert_difference "Student.count", 1 do
-      post students_path(format: :json), params: {
+      post api_v1_students_path(format: :json), params: {
         name: "Bob Jones",
         email: "bob@example.com",
         age: 22,
@@ -146,7 +146,7 @@ class ApiTest < ActionDispatch::IntegrationTest
   end
 
   test "PUT /students/:id.json should update student details" do
-    put student_path(@student1, format: :json), params: {
+    put api_v1_student_path(@student1, format: :json), params: {
       marks: 55
     }, headers: auth_headers(@teacher1)
     assert_response :ok
@@ -158,7 +158,7 @@ class ApiTest < ActionDispatch::IntegrationTest
 
   test "DELETE /students/:id.json should delete a student" do
     assert_difference "Student.count", -1 do
-      delete student_path(@student1, format: :json), headers: auth_headers(@teacher1)
+      delete api_v1_student_path(@student1, format: :json), headers: auth_headers(@teacher1)
     end
     assert_response :no_content
   end
@@ -166,7 +166,7 @@ class ApiTest < ActionDispatch::IntegrationTest
   # ================= ASSOCIATION API TESTS =================
 
   test "GET /teachers/:teacher_id/students.json should return students of teacher" do
-    get teacher_students_path(@teacher1, format: :json), headers: auth_headers(@teacher1)
+    get api_v1_teacher_students_path(@teacher1, format: :json), headers: auth_headers(@teacher1)
     assert_response :success
 
     json_response = JSON.parse(response.body)
@@ -176,7 +176,7 @@ class ApiTest < ActionDispatch::IntegrationTest
 
   test "POST /teachers/:teacher_id/students.json should create student under teacher" do
     assert_difference "Student.count", 1 do
-      post teacher_students_path(@teacher1, format: :json), params: {
+      post api_v1_teacher_students_path(@teacher1, format: :json), params: {
         name: "Charlie Brown",
         email: "charlie@example.com",
         age: 18,
@@ -207,7 +207,7 @@ class ApiTest < ActionDispatch::IntegrationTest
       teacher: @teacher1
     )
 
-    get students_path(name: "Alice", format: :json), headers: auth_headers(@teacher1)
+    get api_v1_students_path(name: "Alice", format: :json), headers: auth_headers(@teacher1)
     assert_response :success
     json_response = JSON.parse(response.body)
     assert_equal 1, json_response.size
@@ -225,7 +225,7 @@ class ApiTest < ActionDispatch::IntegrationTest
       teacher: @teacher1
     )
 
-    get students_path(grade: "A", format: :json), headers: auth_headers(@teacher1)
+    get api_v1_students_path(grade: "A", format: :json), headers: auth_headers(@teacher1)
     assert_response :success
     json_response = JSON.parse(response.body)
     assert_equal 1, json_response.size
@@ -249,7 +249,7 @@ class ApiTest < ActionDispatch::IntegrationTest
       teacher: teacher2
     )
 
-    get teachers_path(subject: "Math", format: :json), headers: auth_headers(@teacher1)
+    get api_v1_teachers_path(subject: "Math", format: :json), headers: auth_headers(@teacher1)
     assert_response :success
     json_response = JSON.parse(response.body)
     assert_equal 1, json_response.size
@@ -259,7 +259,7 @@ class ApiTest < ActionDispatch::IntegrationTest
   # ================= NEGATIVE SCENARIOS =================
 
   test "GET /teachers/:id.json with invalid ID should return 404" do
-    get teacher_path(id: 99999, format: :json), headers: auth_headers(@teacher1)
+    get api_v1_teacher_path(id: 99999, format: :json), headers: auth_headers(@teacher1)
     assert_response :not_found
 
     json_response = JSON.parse(response.body)
@@ -267,7 +267,7 @@ class ApiTest < ActionDispatch::IntegrationTest
   end
 
   test "POST /teachers.json with missing fields should return 422" do
-    post teachers_path(format: :json), params: {
+    post api_v1_teachers_path(format: :json), params: {
       name: ""
     }, headers: auth_headers(@teacher1)
     assert_response :unprocessable_entity
@@ -277,7 +277,7 @@ class ApiTest < ActionDispatch::IntegrationTest
   end
 
   test "POST /students.json with invalid teacher assignment should return 422" do
-    post students_path(format: :json), params: {
+    post api_v1_students_path(format: :json), params: {
       name: "Bob Jones",
       email: "bob@example.com",
       age: 22,
