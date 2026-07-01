@@ -1,25 +1,23 @@
 Rails.application.routes.draw do
    devise_for :users
-  get "users/index"
-  
-  get "dashboard/index"
+
 
   resources :students
   resources :users, only: [ :index ]
   get "dashboard", to: "dashboard#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-  #Api routes
+  # Api routes
   namespace :api do
     namespace :v1 do
        devise_scope :user do
        post "login", to: "sessions#create"
        delete "logout", to: "sessions#destroy"
     end
-      resources :teachers, except: [:new, :edit] do
-        resources :students, only: [:index, :create]
+      resources :teachers, except: [ :new, :edit ] do
+        resources :students, only: [ :index, :create ]
       end
 
-      resources :students, except: [:new, :edit]
+      resources :students, except: [ :new, :edit ]
     end
   end
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

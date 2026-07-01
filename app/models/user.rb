@@ -1,8 +1,15 @@
 class User < ApplicationRecord
-  scope :teacher, -> { where(role: "teacher") }
-  scope :by_subject, ->(subj) {
-    joins(:students).where("students.course LIKE ?", "%#{subj}%").distinct
-  }
+  enum :role, { 
+    admin: "admin",
+    teacher: "teacher",
+    student: "student"
+   }
+  scope :by_subject, ->(subj) do
+    search = ActiveRecord::Base.sanitize_sql_like(subj)
+    joins(:students)
+     .where("students.course LIKE ?", "%#{search}%").distinct
+  end
+  
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -17,16 +24,8 @@ class User < ApplicationRecord
   has_many :students, foreign_key: :teacher_id, dependent: :destroy
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true
-
-  def admin?
-    role == "admin"
-  end
-
-  def teacher?
-    role == "teacher"
-  end
-
+  
   def subject
-    students.pluck(:course).uniq.first || "Mathematics"
+    students.distinct.pick(:course) || "Mathematics"
   end
 end

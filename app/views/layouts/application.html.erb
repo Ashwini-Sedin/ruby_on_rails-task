@@ -12,8 +12,13 @@
 
 
 <body>
-  <p class="notice"><%= notice %></p>
-  <p class="alert"><%= alert %></p>
+  <% flash.each do |type, message| %>
+  <% if message.present? %>
+    <div class="flash <%= type %>">
+      <%= message %>
+    </div>
+  <% end %>
+  <% end %>
 
   <%= render "shared/header" %>
 

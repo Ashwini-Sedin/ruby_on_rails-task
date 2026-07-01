@@ -1,16 +1,18 @@
 module Api
   module V1
     class StudentsController < BaseController
-      before_action :authenticate_user!
-      before_action :set_student, only: [:show, :update, :destroy]
+  
+      before_action :set_student, only: [ :show, :update, :destroy ]
 
       def index
         students = Student.all
-
-        students = students.where(
-          "name LIKE ?",
-          "%#{params[:name]}%"
-        ) if params[:name].present?
+        if params[:name].present?
+          search= ActiveRecord::Base.sanitize_sql_like(params[:name])
+          students = students.where(
+            "name LIKE ?",
+            "%#{search}%"
+          )
+        end
 
         students = students.by_grade(params[:grade]) if params[:grade].present?
         students = students.by_course(params[:course]) if params[:course].present?
@@ -29,9 +31,7 @@ module Api
           render json: student_json(student),
                  status: :created
         else
-          render json: {
-            errors: student.errors.full_messages
-          }, status: :unprocessable_entity
+          render_validation_errors(student)
         end
       end
 
@@ -39,9 +39,7 @@ module Api
         if @student.update(student_params)
           render json: student_json(@student)
         else
-          render json: {
-            errors: @student.errors.full_messages
-          }, status: :unprocessable_entity
+          render_validation_errors(@student)
         end
       end
 
@@ -56,8 +54,17 @@ module Api
         @student = Student.find(params[:id])
       end
 
+      private
+
+      def render_validation_errors(record)
+         render json: {
+         errors: record.errors.full_messages
+         }, status: :unprocessable_entity
+      end
+
+
       def student_params
-        params.permit(
+        params.require(:student).permit(
           :name,
           :email,
           :age,

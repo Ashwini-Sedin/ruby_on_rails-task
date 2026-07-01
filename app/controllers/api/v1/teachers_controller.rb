@@ -2,9 +2,9 @@ module Api
   module V1
     class TeachersController < BaseController
       before_action :set_teacher, only: %i[show update destroy]
-
+  
       def index
-        teachers = User.teacher
+        teachers = User.teacher.includes(:students)
 
         teachers = teachers.by_subject(params[:subject]) if params[:subject].present?
 
@@ -22,15 +22,12 @@ module Api
       end
 
       def create
-        teacher = User.new(teacher_params)
-        teacher.role = "teacher"
-
+        teacher = User.new(teacher_params.merge(role :teacher))
+  
         if teacher.save
           render_teacher(teacher, :created)
         else
-          render json: {
-            errors: teacher.errors.full_messages
-          }, status: :unprocessable_entity
+          render_validation_errors(teacher)
         end
       end
 
@@ -38,9 +35,7 @@ module Api
         if @teacher.update(teacher_params)
           render_teacher(@teacher)
         else
-          render json: {
-            errors: @teacher.errors.full_messages
-          }, status: :unprocessable_entity
+          render_validation_errors(@teacher)
         end
       end
 
@@ -52,11 +47,18 @@ module Api
       private
 
       def set_teacher
-        @teacher = User.teacher.find(params[:id])
+        @teacher = User.teacher.includes(:students).find(params[:id])
+      end
+
+      def render_validation_errors(record)
+        render json: {
+        errors: record.errors.full_messages
+        }, status: :unprocessable_entity
       end
 
       def teacher_params
-        params.permit(:name, :email, :password)
+        params.require(:teacher).permit(
+          :name, :email, :password)
       end
 
       def render_teacher(teacher, status = :ok)

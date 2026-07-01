@@ -10,17 +10,17 @@
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
   config.jwt do |jwt|
-    jwt.secret = ENV['DEVISE_JWT_SECRET_KEY'] || Rails.application.credentials.jwt_secret_key || Rails.application.credentials.secret_key_base
+    jwt.secret = ENV["DEVISE_JWT_SECRET_KEY"] || Rails.application.credentials.jwt_secret_key || Rails.application.credentials.secret_key_base
     jwt.dispatch_requests = [
-      ['POST', %r{^/api/v1/login(\.json)?$}],
-      ['POST', %r{^/users/sign_in(\.json)?$}]
+      [ "POST", %r{^/api/v1/login(\.json)?$} ],
+      [ "POST", %r{^/users/sign_in(\.json)?$} ]
     ]
     jwt.revocation_requests = [
-      ['DELETE', %r{^/api/v1/logout(\.json)?$}],
-      ['DELETE', %r{^/users/sign_out(\.json)?$}]
+      [ "DELETE", %r{^/api/v1/logout(\.json)?$} ],
+      [ "DELETE", %r{^/users/sign_out(\.json)?$} ]
     ]
     jwt.request_formats = {
-      user: [:json]
+      user: [ :json ]
     }
     jwt.expiration_time = 1.day.to_i
   end
@@ -332,7 +332,7 @@ Devise.setup do |config|
   # ==> JWT Configuration
   # Configuration merged into the main jwt block above
 
-  config.navigational_formats = [:html, :turbo_stream]
+  config.navigational_formats = [ :html, :turbo_stream ]
 end
 
 ActiveSupport.on_load(:devise_controller) do

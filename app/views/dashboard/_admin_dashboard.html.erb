@@ -1,0 +1,55 @@
+<div class="stats-grid">
+  <div class="stat-card students-stat">
+    <div class="stat-content">
+      <h3><%= @total_students %></h3>
+      <p>Total Students</p>
+    </div>
+  </div>
+
+  <div class="stat-card teachers-stat">
+    <div class="stat-content">
+      <h3><%= @total_teachers %></h3>
+      <p>Total Teachers</p>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard-box-card">
+  <div class="card-header">
+    <h2>Students Per Teacher</h2>
+    <span class="badge">Staff Breakdown</span>
+  </div>
+
+  <div class="card-body">
+    <table class="dashboard-table">
+      <thead>
+        <tr>
+          <th>Teacher Name</th>
+          <th>Email Address</th>
+          <th>Total Assigned Students</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @students_per_teacher.each do |teacher| %>
+          <tr>
+            <td>
+              <span class="teacher-name-cell">
+                <span class="avatar">
+                  <%= teacher.name.to_s.first&.upcase || "?" %>
+                </span>
+                <%= teacher.name %>
+              </span>
+            </td>
+
+            <td class="email-cell"><%= teacher.email %></td>
+
+            <td>
+              <span class="count-badge"><%= teacher.students_count %></span>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
