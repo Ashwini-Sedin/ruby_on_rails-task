@@ -2,6 +2,9 @@ class Student < ApplicationRecord
   belongs_to :teacher, class_name: "User", foreign_key: :teacher_id, counter_cache: true
   has_one_attached :profile_photo
   has_many_attached :documents
+  after_create :send_welcome_email
+  after_commit :send_teacher_assignment_emails, on: [ :create, :update ], if: -> { saved_change_to_teacher_id? && teacher_id.present? }
+  after_commit :send_marks_published_email, on: :update, if: :saved_change_to_marks?
   scope :search, ->(term) {
     where(
       "name LIKE :search OR email LIKE :search",
@@ -37,7 +40,7 @@ class Student < ApplicationRecord
   validates :city, presence: true
   validate :validate_profile_photo
   validate :validate_documents
-  private 
+  private
 
   def validate_profile_photo
     return unless profile_photo.attached?
@@ -45,10 +48,24 @@ class Student < ApplicationRecord
       errors.add(:profile_photo, "must be a JPEG or PNG image")
     end
     if profile_photo.blob.byte_size > 5.megabytes
-      errors.add(:profile_photo, "size must be less than 5MB")  
-  
+      errors.add(:profile_photo, "size must be less than 5MB")
+
     end
-  end 
+  end
+
+  def send_welcome_email
+    StudentMailer.welcome_email(self).deliver_later
+  end
+
+  def send_teacher_assignment_emails
+    StudentMailer.teacher_assigned(self).deliver_later
+    TeacherMailer.new_student(self).deliver_later
+  end
+
+  def send_marks_published_email
+    StudentMailer.marks_published(self).deliver_later if marks.present?
+  end
+
   def validate_documents
     return unless documents.attached?
     documents.each do |document|
@@ -69,6 +86,9 @@ class Student < ApplicationRecord
 
     "N/A"
   end
+
+
+
 
   def grade
     return "N/A" unless marks.present?

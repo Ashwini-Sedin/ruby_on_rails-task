@@ -1,0 +1,20 @@
+<h2>Hello <%= @teacher.name %>,</h2>
+
+<p><%= @student.name %> has uploaded new documents.</p>
+
+<p>
+  <strong>Course:</strong>
+  <%= @student.course %>
+</p>
+
+<p><strong>Uploaded Documents:</strong></p>
+
+<ul>
+  <% @student.documents.each do |document| %>
+    <li><%= document.filename.to_s %></li>
+  <% end %>
+</ul>
+
+<p>Regards,</p>
+
+<p>ABC Academy</p>

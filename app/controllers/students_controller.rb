@@ -1,6 +1,6 @@
 
 class StudentsController < ApplicationController
-  before_action :set_student, only: %i[show edit update destroy remove_profile_photo remove_document]
+  before_action :set_student, only: %i[show edit update destroy remove_profile_photo remove_document download_report_card]
 
   def index
     @students =
@@ -12,7 +12,6 @@ class StudentsController < ApplicationController
 
     @students = @students.search(params[:search]) if params[:search].present?
     @students = @students.by_course(params[:course]) if params[:course].present?
-    @students = @students.where(course: params[:course]) if params[:course].present?
   end
 
   def show; end
@@ -71,6 +70,15 @@ class StudentsController < ApplicationController
                 notice: "Document deleted successfully."
   end
 
+  def download_report_card
+    pdf_data = ReportCardService.generate(@student)
+    StudentMailer.report_card(@student, pdf_data).deliver_now
+    send_data pdf_data,
+              filename: "ReportCard.pdf",
+              type: "application/pdf",
+              disposition: "attachment"
+  end
+
   private
 
   def set_student
@@ -83,7 +91,7 @@ class StudentsController < ApplicationController
   end
 
   def student_params
-    permitted = [:name, :email, :age, :course, :city, :marks, :profile_photo, { documents: [] }]
+    permitted = [ :name, :email, :age, :course, :city, :marks, :profile_photo, { documents: [] } ]
     permitted << :teacher_id if current_user.admin?
 
     params.require(:student).permit(permitted)

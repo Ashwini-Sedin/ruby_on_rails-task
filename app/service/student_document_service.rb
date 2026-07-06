@@ -3,6 +3,9 @@ class StudentDocumentService
     return unless files.present?
 
     student.documents.attach(files)
+    if student.teacher.present?
+      TeacherMailer.documents_uploaded(student).deliver_later
+    end
   end
 
   def self.delete(student, document_id)
