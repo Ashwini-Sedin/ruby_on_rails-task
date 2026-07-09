@@ -12,10 +12,13 @@
 
 
 <body>
-  <p class="notice"><%= notice %></p>
-  <p class="alert"><%= alert %></p>
+
 
   <%= render "shared/header" %>
+ 
+  <div id="flash">
+    <%= render "layouts/flash" %>
+  </div>
 
   <div class="container">
     <%= yield %>

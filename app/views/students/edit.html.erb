@@ -1,3 +1,5 @@
-<h2>Edit Student</h2>
-
-<%= render "form" %>
+<%= turbo_frame_tag @student, class: "tr", style: "display: table-row;" do %>
+  <td colspan="6">
+    <%= render "form", student: @student %>
+  </td>
+<% end %>

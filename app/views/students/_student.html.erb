@@ -1,0 +1,26 @@
+<%= turbo_frame_tag student, class: "tr", style: "display: table-row;" do %>
+  <table style="width: 100%; border-collapse: collapse; margin: 0; border: none; table-layout: fixed;">
+    <tr style="border: none;">
+      <td style="border: none; padding: 14px 16px; width: 16%;"><%= student.name %></td>
+      <td style="border: none; padding: 14px 16px; width: 22%;"><%= student.email %></td>
+      <td style="border: none; padding: 14px 16px; width: 8%;"><%= student.age %></td>
+      <td style="border: none; padding: 14px 16px; width: 16%;"><%= student.course %></td>
+      <td style="border: none; padding: 14px 16px; width: 16%;"><%= student.city %></td>
+      <td style="border: none; padding: 14px 16px; width: 22%;">
+        <%= link_to "View",
+            student_path(student),
+            data: { turbo_frame: "_top" } %> |
+        <%= link_to "Edit",
+            edit_student_path(student) %> |
+        <%= link_to "Download",
+            download_report_card_student_path(student) %> |
+        <%= link_to "Delete",
+            student_path(student),
+            data: {
+              turbo_method: :delete,
+              turbo_confirm: "Are you sure?"
+            } %>
+      </td>
+    </tr>
+  </table>
+<% end %>

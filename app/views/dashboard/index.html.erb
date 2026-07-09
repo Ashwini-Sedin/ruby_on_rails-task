@@ -1,3 +1,4 @@
+<%= turbo_stream_from "teacher_counts" %>
 <div class="dashboard-header">
   <h1>Dashboard</h1>
   <p class="subtitle">Logged in as: <strong><%= current_user.name %></strong> (<%= current_user.role.titleize %>)</p>
@@ -40,21 +41,11 @@
               <th>Total Assigned Students</th>
             </tr>
           </thead>
-          <tbody>
-            <% @students_per_teacher.each do |teacher| %>
-              <tr>
-                <td>
-                  <span class="teacher-name-cell">
-                    <span class="avatar"><%= teacher.name[0].upcase %></span>
-                    <%= teacher.name %>
-                  </span>
-                </td>
-                <td class="email-cell"><%= teacher.email %></td>
-                <td>
-                  <span class="count-badge"><%= teacher.students_count %></span>
-                </td>
-              </tr>
-            <% end %>
+          
+          <tbody id="students_per_teacher">
+            <%= render "students_per_teacher",
+            teachers: @students_per_teacher %>
+         
           </tbody>
         </table>
       </div>

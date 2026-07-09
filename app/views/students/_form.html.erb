@@ -1,4 +1,4 @@
-<div class="form-container">
+<div class="form-container" data-controller="student-form">
   <%= form_with model: @student do |f| %>
     <% if @student.errors.any? %>
       <div class="error-box" style="background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
@@ -12,27 +12,52 @@
 
     <div class="form-group" style="margin-bottom: 15px;">
       <%= f.label :name, style: "display: block; font-weight: bold; margin-bottom: 5px;" %>
-      <%= f.text_field :name, style: "width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" %>
+      <%= f.text_field :name, style: "width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;",
+            data: {
+              student_form_target: "name",
+              action: "input->student-form#updateCounter input->student-form#validate"
+            } %>
+      <div style="font-size: 0.85em; color: #64748b; margin-top: 4px;">
+        Name length: <span data-student-form-target="counter">0</span> characters
+      </div>
     </div>
 
     <div class="form-group" style="margin-bottom: 15px;">
       <%= f.label :email, style: "display: block; font-weight: bold; margin-bottom: 5px;" %>
-      <%= f.email_field :email, style: "width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" %>
+      <%= f.email_field :email, style: "width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;",
+            data: {
+              student_form_target: "required",
+              action: "input->student-form#validate"
+            } %>
     </div>
 
     <div class="form-group" style="margin-bottom: 15px;">
       <%= f.label :age, style: "display: block; font-weight: bold; margin-bottom: 5px;" %>
-      <%= f.number_field :age, style: "width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" %>
+      <%= f.number_field :age, style: "width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;",
+            data: {
+              student_form_target: "required",
+              action: "input->student-form#validate"
+            } %>
     </div>
 
     <div class="form-group" style="margin-bottom: 15px;">
       <%= f.label :city, style: "display: block; font-weight: bold; margin-bottom: 5px;" %>
-      <%= f.text_field :city, style: "width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" %>
+      <%= f.text_field :city, style: "width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;",
+            data: {
+              student_form_target: "required",
+              action: "input->student-form#validate"
+            } %>
     </div>
 
     <div class="form-group" style="margin-bottom: 15px;">
       <%= f.label :course, style: "display: block; font-weight: bold; margin-bottom: 5px;" %>
-      <%= f.select :course, ["Ruby", "Rails", "React", "Java"], {}, { style: "width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" } %>
+      <%= f.select :course, ["Ruby", "Rails", "React", "Java"], {}, {
+            style: "width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;",
+            data: {
+              student_form_target: "required",
+              action: "change->student-form#validate"
+            }
+          } %>
     </div>
 
     <% if current_user.admin? %>
@@ -43,7 +68,13 @@
             :id,
             :name,
             { prompt: "Select Teacher" },
-            { style: "width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" } %>
+            {
+              style: "width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;",
+              data: {
+                student_form_target: "required",
+                action: "change->student-form#validate"
+              }
+            } %>
       </div>
     <% end %>
 
@@ -120,6 +151,7 @@
 
     <br>
 
-    <%= f.submit class: "btn btn-primary" %>
+    <%= f.submit class: "btn btn-primary", data: { student_form_target: "submit" } %>
+    
   <% end %>
 </div>

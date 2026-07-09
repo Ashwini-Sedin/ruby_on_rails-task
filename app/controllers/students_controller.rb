@@ -12,9 +12,15 @@ class StudentsController < ApplicationController
 
     @students = @students.search(params[:search]) if params[:search].present?
     @students = @students.by_course(params[:course]) if params[:course].present?
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+   end 
+      
   end
 
-  def show; end
+  def show
+  end
 
   def new
     @student = Student.new
@@ -22,17 +28,21 @@ class StudentsController < ApplicationController
 
 
   def create
+    teacher_id = student_params[:teacher_id].presence || current_user.id
     result = StudentRegistrationService.call(
-      student_params.merge(teacher_id: current_user.id)
+      student_params.merge(teacher_id: teacher_id)
     )
 
     if result[:success]
-      student = result[:student]
+      @student = result[:student]
 
-      ProfilePhotoService.upload(student, params[:student][:profile_photo])
-      StudentDocumentService.upload(student, params[:student][:documents])
-
-      redirect_to students_path, notice: "Student created successfully."
+      ProfilePhotoService.upload(@student, params[:student][:profile_photo])
+      StudentDocumentService.upload(@student, params[:student][:documents])
+      flash.now[:notice] = "Student created successfully."
+      respond_to do |format|
+        format.turbo_stream  
+        format.html { redirect_to students_path, notice: "Student created successfully."}
+      end
     else
       @student = Student.new(student_params)
       @student.errors.add(:base, result[:errors].join(", "))
@@ -47,8 +57,12 @@ class StudentsController < ApplicationController
     if @student.update(student_params.except(:profile_photo, :documents))
       ProfilePhotoService.upload(@student, params[:student][:profile_photo])
       StudentDocumentService.upload(@student, params[:student][:documents])
-
-      redirect_to students_path, notice: "Student updated successfully."
+     
+      flash.now[:notice] = "Student updated successfully."
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to students_path, notice: "Student updated successfully." }
+      end
     else
       render :edit, status: :unprocessable_entity
     end
@@ -56,7 +70,11 @@ class StudentsController < ApplicationController
 
   def destroy
     @student.destroy
-    redirect_to students_path, notice: "Student deleted successfully"
+    flash.now[:notice] = "Student deleted successfully"
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to students_path, notice: "Student deleted successfully" }
+    end
   end
   def remove_profile_photo
     ProfilePhotoService.delete(@student)
