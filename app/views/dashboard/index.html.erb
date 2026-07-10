@@ -5,7 +5,17 @@
 </div>
 
 <div class="dashboard-content">
+  <div style="margin-bottom:20px;">
+    <%= button_to "Generate All Reports",
+        send_all_report_cards_students_path,
+        method: :post,
+        class: "btn btn-success",
+        data: { turbo_confirm: "Are you sure you want to generate and send report cards to all students?" } %>
+  </div>
+
   <% if current_user.admin? %>
+
+  <div class="stats-grid">
 
    
     <div class="stats-grid">

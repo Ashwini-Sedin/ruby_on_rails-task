@@ -1,6 +1,6 @@
 
 class StudentsController < ApplicationController
-  before_action :set_student, only: %i[show edit update destroy remove_profile_photo remove_document download_report_card]
+  before_action :set_student, only: %i[show edit update destroy remove_profile_photo remove_document generate_report_card]
 
   def index
     @students =
@@ -88,14 +88,26 @@ class StudentsController < ApplicationController
                 notice: "Document deleted successfully."
   end
 
-  def download_report_card
-    pdf_data = ReportCardService.generate(@student)
-    StudentMailer.report_card(@student, pdf_data).deliver_now
-    send_data pdf_data,
-              filename: "ReportCard.pdf",
-              type: "application/pdf",
-              disposition: "attachment"
+  def generate_report_card
+  ReportCardGenerationJob.perform_async(@student.id)
+
+  redirect_to student_path(@student),
+              notice: "Report generation has been queued successfully."
+ end
+
+  def send_all_report_cards
+    students = if current_user.admin?
+                 Student.all
+               else
+                 current_user.students
+               end
+
+    SendAllReportCardsJob.perform_async(students.pluck(:id))
+
+    redirect_to dashboard_path,
+                notice: "Report cards are being generated and emailed to all students."
   end
+ 
 
   private
 

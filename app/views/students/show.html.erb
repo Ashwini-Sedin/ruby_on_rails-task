@@ -31,19 +31,39 @@
     </span>
   <% end %>
 </p>
-
+<div style="margin-top: 15px; display: flex; gap: 10px; align-items: center;">
+  <%= button_to "Generate Report Card",
+      generate_report_card_student_path(@student),
+      method: :post,
+      class: "btn btn-primary" %>
+      
+  <% if @student.report_card.attached? %>
+    <%= link_to "Download Report Card",
+        rails_blob_path(@student.report_card, disposition: "attachment"),
+        class: "btn btn-success" %>
+  <% end %>
+</div>
+    
 <% if @student.documents.attached? %>
+
   <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+
   <h3>Documents</h3>
+
   <ul class="documents-list" style="padding-left: 20px;">
+
     <% @student.documents.each do |document| %>
+
       <li style="margin-bottom: 10px;">
-        <%= document.filename %> - 
+        <%= document.filename %> -
+
         <%= link_to "Download",
             rails_blob_path(document, disposition: "attachment"),
             style: "color: #007bff; text-decoration: none;" %>
       </li>
+
     <% end %>
+        
   </ul>
 <% end %>
 

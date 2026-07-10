@@ -32,13 +32,18 @@ class StudentMailer < ApplicationMailer
     )
   end
 
-  def report_card(student, pdf_data)
-    @student = student
-    attachments["ReportCard.pdf"] = pdf_data
+  def report_card(student, pdf_data = nil)
+  @student = student
 
-    mail(
-      to: @student.email,
-      subject: "Your Report Card"
-    )
+  if pdf_data.present?
+    attachments["ReportCard.pdf"] = pdf_data
+  elsif student.report_card.attached?
+    attachments["ReportCard.pdf"] = student.report_card.download
   end
+
+  mail(
+    to: student.email,
+    subject: "Your Report Card"
+  )
+end
 end
