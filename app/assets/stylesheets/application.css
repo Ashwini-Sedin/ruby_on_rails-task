@@ -542,3 +542,18 @@ table:not(.dashboard-table) tr:hover {
   margin: 0;
   padding-left: 20px;
 }
+
+.result-pass {
+  color: green;
+  font-weight: bold;
+}
+
+.result-fail {
+  color: red;
+  font-weight: bold;
+}
+
+.result-na {
+  color: gray;
+  font-weight: bold;
+}
