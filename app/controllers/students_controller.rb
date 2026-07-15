@@ -11,7 +11,7 @@ class StudentsController < ApplicationController
 
     @students = @students.search(params[:search]) if params[:search].present?
     @students = @students.by_course(params[:course]) if params[:course].present?
-    @students = @students.where(course: params[:course]) if params[:course].present?
+   
   end
 
   def show; end
@@ -22,7 +22,7 @@ class StudentsController < ApplicationController
 
   def create
     @student = Student.new(student_params)
-    @student.teacher_id = current_user.id
+    @student.teacher_id = current_user.id if current_user.teacher?
 
     if @student.save
       redirect_to students_path, notice: "Student created successfully"

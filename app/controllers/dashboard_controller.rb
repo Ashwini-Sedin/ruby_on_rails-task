@@ -3,7 +3,7 @@ class DashboardController < ApplicationController
     if current_user.admin?
        @total_students=Student.count
        @total_teachers= User.teacher.count
-       @students_per_teacher = User.teacher
+       @teachers = User.teacher
 
     else
       students = current_user.students
