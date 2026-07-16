@@ -6,7 +6,6 @@ class UsersController < ApplicationController
       case params[:role]
       when "teacher"
         User.teacher
-      
       else
         User.all
       end
