@@ -11,16 +11,14 @@
 
 <p>
   <strong>Result:</strong>
-
-  <% if @student.result == "pass" %>
-    <span style="color:green;font-weight:bold;">
-      Pass
-    </span>
-  <% else %>
-    <span style="color:red;font-weight:bold;">
-      Fail
-    </span>
-  <% end %>
+<% case @student.result %>
+<% when "pass" %>
+  <span class="result-pass">Pass</span>
+<% when "fail" %>
+  <span class="result-fail">Fail</span>
+<% else %>
+  <span class="result-na">N/A</span>
+<% end %>
 
 </p>
 

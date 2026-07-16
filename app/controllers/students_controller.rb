@@ -1,23 +1,19 @@
 class StudentsController < ApplicationController
-  before_action :set_student, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_student, only: %i[show edit update destroy]
+
   def index
-    @students = Student.all
+    @students =
+      if current_user.admin?
+        Student.all
+      else
+        current_user.students
+      end
 
-    if params[:search].present?
-      @students = @students.where(
-        "name LIKE ? OR email LIKE ?",
-        "%#{params[:search]}%",
-        "%#{params[:search]}%"
-      )
-    end
-
-    if params[:course].present?
-      @students = @students.where(course: params[:course])
-    end
+    @students = @students.search(params[:search]) if params[:search].present?
+    @students = @students.by_course(params[:course]) if params[:course].present?
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @student = Student.new
@@ -25,44 +21,45 @@ class StudentsController < ApplicationController
 
   def create
     @student = Student.new(student_params)
+    @student.teacher_id = current_user.id if current_user.teacher?
 
     if @student.save
-      redirect_to students_path
+      redirect_to students_path, notice: "Student created successfully"
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @student.update(student_params)
-      redirect_to students_path
+      redirect_to students_path, notice: "Student updated successfully"
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
     @student.destroy
-    redirect_to students_path
+    redirect_to students_path, notice: "Student deleted successfully"
   end
 
   private
 
   def set_student
-    @student = Student.find(params[:id])
+    @student =
+      if current_user.admin?
+        Student.find(params[:id])
+      else
+        current_user.students.find(params[:id])
+      end
   end
 
   def student_params
-    params.require(:student).permit(
-      :name,
-      :email,
-      :age,
-      :course,
-      :city,
-      :marks
-    )
+    permitted = %i[name email age course city marks]
+    permitted << :teacher_id if current_user.admin?
+
+    params.require(:student).permit(permitted)
   end
 end

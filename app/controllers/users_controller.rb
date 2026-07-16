@@ -1,0 +1,19 @@
+class UsersController < ApplicationController
+  before_action :require_admin!
+
+  def index
+    @users =
+      case params[:role]
+      when "teacher"
+        User.teacher
+      else
+        User.all
+      end
+  end
+
+  private
+
+  def require_admin!
+    redirect_to root_path, alert: "Access Denied" unless current_user.admin?
+  end
+end

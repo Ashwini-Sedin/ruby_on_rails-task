@@ -10,7 +10,15 @@
   <%= stylesheet_link_tag "application", media: "all" %>
 </head>
 
+
 <body>
+  <% if notice.present? %>
+  <p class="notice"><%= notice %></p>
+  <% end %>
+
+  <% if alert.present? %>
+  <p class="alert"><%= alert %></p>
+  <% end %>
 
   <%= render "shared/header" %>
 
@@ -19,6 +27,7 @@
   </div>
 
   <%= render "shared/footer" %>
+  
 
 </body>
 </html>
