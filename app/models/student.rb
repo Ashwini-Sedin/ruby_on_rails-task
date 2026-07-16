@@ -22,6 +22,6 @@ class Student < ApplicationRecord
  def result
   return "N/A" if marks.nil?
 
-  marks >= 35 ? "pass" : "fail" 
+  marks >= 35 ? "pass" : "fail"
  end
 end

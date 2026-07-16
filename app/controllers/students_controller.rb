@@ -11,7 +11,6 @@ class StudentsController < ApplicationController
 
     @students = @students.search(params[:search]) if params[:search].present?
     @students = @students.by_course(params[:course]) if params[:course].present?
-   
   end
 
   def show; end
