@@ -1,6 +1,5 @@
 
 class UsersController < ApplicationController
-  before_action :authenticate_user!
   before_action :require_admin!
 
   def index
@@ -8,8 +7,6 @@ class UsersController < ApplicationController
       case params[:role]
       when "teacher"
         User.teacher
-      when "student"
-        User.student
       else
         User.all
       end
