@@ -35,7 +35,7 @@ end
   validate :validate_documents
   validates :marks,
             presence: true,
-            numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 
+            numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100
           }
   private
 

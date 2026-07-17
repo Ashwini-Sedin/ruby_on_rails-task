@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  enum :role, { 
+  enum :role, {
     admin: "admin",
     teacher: "teacher",
     student: "student"
@@ -9,7 +9,7 @@ class User < ApplicationRecord
     joins(:students)
      .where("students.course LIKE ?", "%#{search}%").distinct
   end
-  
+
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -24,7 +24,7 @@ class User < ApplicationRecord
   has_many :students, foreign_key: :teacher_id, dependent: :destroy
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true
-  
+
   def subject
     students.distinct.pick(:course) || "Mathematics"
   end

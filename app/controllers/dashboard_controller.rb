@@ -1,29 +1,24 @@
 class DashboardController < ApplicationController
   def index
     if current_user.admin?
-       load_admin_dashboard
+      load_admin_dashboard
     else
-        load_teacher_dashboard
+      load_teacher_dashboard
     end
   end
 
-        
   private
-     
-  def load_admin_dashboard
 
-       @total_students=Student.count
-       @total_teachers= User.teacher.count
-       @students_per_teacher = User.teacher
-  end     
+  def load_admin_dashboard
+    @total_students = Student.count
+    @total_teachers = User.teacher.count
+    @teachers = User.teacher
+  end
 
   def load_teacher_dashboard
-      students = current_user.students
+    students = current_user.students
 
-      @total_students = students.count
-
-      @course_counts = students.group(:course).count
-    end
+    @total_students = students.count
+    @course_counts = students.group(:course).count
   end
-
-
+end

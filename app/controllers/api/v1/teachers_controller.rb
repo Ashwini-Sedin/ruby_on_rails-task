@@ -2,7 +2,7 @@ module Api
   module V1
     class TeachersController < BaseController
       before_action :set_teacher, only: %i[show update destroy]
-  
+
       def index
         teachers = User.teacher.includes(:students)
 
@@ -23,7 +23,7 @@ module Api
 
       def create
         teacher = User.new(teacher_params.merge(role :teacher))
-  
+
         if teacher.save
           render_teacher(teacher, :created)
         else

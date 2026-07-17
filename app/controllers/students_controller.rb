@@ -12,7 +12,6 @@ class StudentsController < ApplicationController
 
     @students = @students.search(params[:search]) if params[:search].present?
     @students = @students.by_course(params[:course]) if params[:course].present?
-   
   end
 
   def show; end
@@ -27,9 +26,8 @@ class StudentsController < ApplicationController
          student_params
        else
          student_params.merge(teacher_id: current_user.id)
-       end  
-    result = StudentRegistrationService.call(
-      student_attributes)
+       end
+    @student = Student.new(student_attributes)
 
     if @student.save
       redirect_to students_path, notice: "Student created successfully"
