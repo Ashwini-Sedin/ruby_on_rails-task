@@ -22,7 +22,7 @@ module Api
       end
 
       def create
-        teacher = User.new(teacher_params.merge(role :teacher))
+        teacher = User.new(teacher_params.merge(role: :teacher))
 
         if teacher.save
           render_teacher(teacher, :created)

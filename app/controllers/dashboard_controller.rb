@@ -17,7 +17,6 @@ class DashboardController < ApplicationController
 
   def load_teacher_dashboard
     students = current_user.students
-
     @total_students = students.count
     @course_counts = students.group(:course).count
   end
