@@ -12,12 +12,12 @@
 
 
 <body>
-  <% if notice.present? %>
-  <p class="notice"><%= notice %></p>
+  <% flash.each do |type, message| %>
+  <% if message.present? %>
+    <div class="flash <%= type %>">
+      <%= message %>
+    </div>
   <% end %>
-
-  <% if alert.present? %>
-  <p class="alert"><%= alert %></p>
   <% end %>
 
   <%= render "shared/header" %>

@@ -1,0 +1,611 @@
+{
+	"info": {
+		"_postman_id": "a98a0f9a-14d2-4cfb-b8bc-d9eeefc842b1",
+		"name": "Student Management RESTful API Collection (JWT Secured)",
+		"description": "Postman collection for RESTful API testing of the Student Management application. Securely authenticated via JWT. Includes authentication, CRUD, filtering, and negative scenario tests.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Sign In (Get JWT Token)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Automatically save JWT token from headers to a collection variable",
+									"var authHeader = pm.response.headers.get('Authorization');",
+									"if (authHeader) {",
+									"    var token = authHeader.replace('Bearer ', '');",
+									"    pm.collectionVariables.set('jwt_token', token);",
+									"    console.log('JWT Token saved successfully: ' + token);",
+									"}"
+								],
+								"type": "javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"email\": \"teacher@gmail.com\",\n    \"password\": \"password\"\n  }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/users/sign_in.json",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"sign_in.json"
+							]
+						},
+						"description": "Logs in the user and returns a JWT in the 'Authorization' header. A post-request script automatically saves this token as a collection variable 'jwt_token' for use in other requests."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Teacher APIs",
+			"item": [
+				{
+					"name": "Create teacher",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/teachers.json",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"teachers.json"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch all teachers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/teachers.json",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"teachers.json"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch teacher by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/teachers/1.json",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"teachers",
+								"1.json"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update teacher",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Johnathan Doe\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/teachers/1.json",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"teachers",
+								"1.json"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete teacher",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/teachers/1.json",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"teachers",
+								"1.json"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Student APIs",
+			"item": [
+				{
+					"name": "Create student",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Alice Smith\",\n  \"email\": \"alice@example.com\",\n  \"age\": 20,\n  \"course\": \"Mathematics\",\n  \"city\": \"New York\",\n  \"marks\": 85,\n  \"teacher_id\": 1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/students.json",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"students.json"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch all students",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/students.json",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"students.json"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch student by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/students/1.json",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"students",
+								"1.json"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update student",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"marks\": 92\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/students/1.json",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"students",
+								"1.json"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete student",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/students/1.json",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"students",
+								"1.json"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Association APIs",
+			"item": [
+				{
+					"name": "Fetch all students of a teacher",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/teachers/1/students.json",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"teachers",
+								"1",
+								"students.json"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create student under a teacher",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Bob Miller\",\n  \"email\": \"bob.miller@example.com\",\n  \"age\": 21,\n  \"course\": \"Physics\",\n  \"city\": \"Boston\",\n  \"marks\": 76\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/teachers/1/students.json",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"teachers",
+								"1",
+								"students.json"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Filtering APIs",
+			"item": [
+				{
+					"name": "Search students by name",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/students.json?name=Alice",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"students.json"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Alice"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filter students by grade",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/students.json?grade=A",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"students.json"
+							],
+							"query": [
+								{
+									"key": "grade",
+									"value": "A"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filter teachers by subject",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/teachers.json?subject=Math",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"teachers.json"
+							],
+							"query": [
+								{
+									"key": "subject",
+									"value": "Math"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Negative Scenarios",
+			"item": [
+				{
+					"name": "Invalid ID (Teacher)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/teachers/99999.json",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"teachers",
+								"99999.json"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Missing mandatory fields (Teacher)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/teachers.json",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"teachers.json"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid teacher assignment (Student)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Bob Jones\",\n  \"email\": \"bob.jones@example.com\",\n  \"age\": 22,\n  \"course\": \"Science\",\n  \"city\": \"Boston\",\n  \"marks\": 75,\n  \"teacher_id\": 99999\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/students.json",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"students.json"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

@@ -1,3 +1,4 @@
+
 class StudentsController < ApplicationController
   before_action :set_student, only: %i[show edit update destroy]
 
@@ -20,8 +21,13 @@ class StudentsController < ApplicationController
   end
 
   def create
-    @student = Student.new(student_params)
-    @student.teacher_id = current_user.id if current_user.teacher?
+    student_attributes=
+       if current_user.admin?
+         student_params
+       else
+         student_params.merge(teacher_id: current_user.id)
+       end
+    @student = Student.new(student_attributes)
 
     if @student.save
       redirect_to students_path, notice: "Student created successfully"
@@ -57,7 +63,7 @@ class StudentsController < ApplicationController
   end
 
   def student_params
-    permitted = %i[name email age course city marks]
+    permitted = [ :name, :email, :age, :course, :city, :marks, :profile_photo, { documents: [] } ]
     permitted << :teacher_id if current_user.admin?
 
     params.require(:student).permit(permitted)
