@@ -12,7 +12,7 @@ RSpec.describe StudentDocumentService do
 
   describe ".upload" do
     it "attaches documents" do
-      described_class.upload(student, [file])
+      described_class.upload(student, [ file ])
 
       expect(student.documents).to be_attached
       expect(student.documents.count).to eq(1)
@@ -31,5 +31,4 @@ RSpec.describe StudentDocumentService do
     expect(student.documents).not_to be_attached
   end
 end
-  
 end

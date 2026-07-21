@@ -8,7 +8,7 @@ RSpec.describe StudentMailer, type: :mailer do
     let(:mail) { described_class.welcome_email(student) }
 
     it "sends to the student email" do
-      expect(mail.to).to eq([student.email])
+      expect(mail.to).to eq([ student.email ])
     end
 
     it "has the correct subject" do
@@ -24,7 +24,7 @@ RSpec.describe StudentMailer, type: :mailer do
     let(:mail) { described_class.teacher_assigned(student) }
 
     it "sends to the student email" do
-      expect(mail.to).to eq([student.email])
+      expect(mail.to).to eq([ student.email ])
     end
 
     it "has the correct subject" do
@@ -40,7 +40,7 @@ RSpec.describe StudentMailer, type: :mailer do
     let(:mail) { described_class.marks_published(student) }
 
     it "sends to the student email" do
-      expect(mail.to).to eq([student.email])
+      expect(mail.to).to eq([ student.email ])
     end
 
     it "has the correct subject" do
@@ -57,7 +57,7 @@ RSpec.describe StudentMailer, type: :mailer do
     let(:mail) { described_class.report_card(student, pdf_data) }
 
     it "sends to the student email" do
-      expect(mail.to).to eq([student.email])
+      expect(mail.to).to eq([ student.email ])
     end
 
     it "has the correct subject" do

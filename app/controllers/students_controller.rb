@@ -15,8 +15,7 @@ class StudentsController < ApplicationController
     respond_to do |format|
       format.html
       format.turbo_stream
-   end 
-      
+   end
   end
 
   def show
@@ -40,8 +39,8 @@ class StudentsController < ApplicationController
       StudentDocumentService.upload(@student, params[:student][:documents])
       flash.now[:notice] = "Student created successfully."
       respond_to do |format|
-        format.turbo_stream  
-        format.html { redirect_to students_path, notice: "Student created successfully."}
+        format.turbo_stream
+        format.html { redirect_to students_path, notice: "Student created successfully." }
       end
     else
       @student = Student.new(student_params)
@@ -57,7 +56,7 @@ class StudentsController < ApplicationController
     if @student.update(student_params.except(:profile_photo, :documents))
       ProfilePhotoService.upload(@student, params[:student][:profile_photo])
       StudentDocumentService.upload(@student, params[:student][:documents])
-     
+
       flash.now[:notice] = "Student updated successfully."
       respond_to do |format|
         format.turbo_stream
@@ -98,16 +97,16 @@ class StudentsController < ApplicationController
   def send_all_report_cards
     students = if current_user.admin?
                  Student.all
-               else
+    else
                  current_user.students
-               end
+    end
 
     SendAllReportCardsJob.perform_async(students.pluck(:id))
 
     redirect_to dashboard_path,
                 notice: "Report cards are being generated and emailed to all students."
   end
- 
+
 
   private
 
@@ -121,11 +120,9 @@ class StudentsController < ApplicationController
   end
 
   def student_params
-    
     permitted = [ :name, :email, :age, :course, :city, :marks, :profile_photo, { documents: [] } ]
     permitted << :teacher_id if current_user.admin?
 
     params.require(:student).permit(permitted)
   end
 end
-

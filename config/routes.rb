@@ -9,7 +9,6 @@ Rails.application.routes.draw do
     collection do
        post :send_all_report_cards
     end
-
   end
   resources :users, only: [ :index ]
   get "dashboard", to: "dashboard#index"

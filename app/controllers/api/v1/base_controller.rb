@@ -4,7 +4,7 @@ module Api
       skip_forgery_protection
 
       before_action :authenticate_user!
-      
+
       rescue_from ActiveRecord::RecordNotFound do |e|
         render json: {
           errors: [ e.message ]

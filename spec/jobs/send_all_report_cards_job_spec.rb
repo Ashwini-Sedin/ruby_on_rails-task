@@ -12,7 +12,7 @@ RSpec.describe SendAllReportCardsJob, type: :job do
 
   describe "#perform" do
     it "queues report card generation for given student ids" do
-      described_class.new.perform([student1.id, student2.id])
+      described_class.new.perform([ student1.id, student2.id ])
 
       expect(ReportCardGenerationJob).to have_received(:perform_async).with(student1.id)
       expect(ReportCardGenerationJob).to have_received(:perform_async).with(student2.id)

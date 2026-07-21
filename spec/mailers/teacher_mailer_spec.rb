@@ -8,7 +8,7 @@ RSpec.describe TeacherMailer, type: :mailer do
     let(:mail) { described_class.new_student(student) }
 
     it "sends to the teacher email" do
-      expect(mail.to).to eq([teacher.email])
+      expect(mail.to).to eq([ teacher.email ])
     end
 
     it "has the correct subject" do
@@ -24,7 +24,7 @@ RSpec.describe TeacherMailer, type: :mailer do
     let(:mail) { described_class.documents_uploaded(student) }
 
     it "sends to the teacher email" do
-      expect(mail.to).to eq([teacher.email])
+      expect(mail.to).to eq([ teacher.email ])
     end
 
     it "has the correct subject" do
