@@ -585,3 +585,18 @@ table:not(.dashboard-table) tr:hover {
   background: #dc3545;
 }
 
+
+.result-pass {
+  color: green;
+  font-weight: bold;
+}
+
+.result-fail {
+  color: red;
+  font-weight: bold;
+}
+
+.result-na {
+  color: gray;
+  font-weight: bold;
+}

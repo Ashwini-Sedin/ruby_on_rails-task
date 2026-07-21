@@ -86,3 +86,4 @@ group :test do
   gem "faker"
   gem "sidekiq"
 end
+

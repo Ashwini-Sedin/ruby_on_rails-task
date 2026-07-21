@@ -15,6 +15,13 @@ Rails.application.configure do
   # Enable server timing.
   config.server_timing = true
 
+  config.after_initialize do
+  Bullet.enable = true
+  Bullet.alert = true
+  Bullet.console = true
+  Bullet.rails_logger = true
+  end
+
   # Enable/disable Action Controller caching. By default Action Controller caching is disabled.
   # Run rails dev:cache to toggle Action Controller caching.
   if Rails.root.join("tmp/caching-dev.txt").exist?

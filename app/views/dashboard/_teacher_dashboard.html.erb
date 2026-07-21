@@ -1,0 +1,43 @@
+<div class="stats-grid">
+  <div class="stat-card students-stat">
+    <div class="stat-content">
+      <h3><%= @total_students %></h3>
+      <p>My Total Students</p>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard-box-card">
+  <div class="card-header">
+    <h2>Students Count by Course</h2>
+    <span class="badge">Academics</span>
+  </div>
+
+  <div class="card-body">
+    <table class="dashboard-table">
+      <thead>
+        <tr>
+          <th>Course Subject</th>
+          <th>Total Students Enrolled</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @course_counts.each do |course, count| %>
+          <tr>
+            <td>
+              <span class="course-cell">
+                <span class="course-dot"></span>
+                <strong><%= course %></strong>
+              </span>
+            </td>
+
+            <td>
+              <span class="count-badge"><%= count %></span>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

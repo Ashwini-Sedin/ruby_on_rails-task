@@ -14,98 +14,10 @@
   </div>
 
   <% if current_user.admin? %>
-
-  <div class="stats-grid">
-
-   
-    <div class="stats-grid">
-      <div class="stat-card students-stat">
-   
-        <div class="stat-content">
-          <h3><%= @total_students %></h3>
-          <p>Total Students</p>
-        </div>
-      </div>
-
-      <div class="stat-card teachers-stat">
-        
-        <div class="stat-content">
-          <h3><%= @total_teachers %></h3>
-          <p>Total Teachers</p>
-        </div>
-      </div>
-    </div>
-
-  
-    <div class="dashboard-box-card">
-      <div class="card-header">
-        <h2>Students Per Teacher</h2>
-        <span class="badge">Staff Breakdown</span>
-      </div>
-      <div class="card-body">
-        <table class="dashboard-table">
-          <thead>
-            <tr>
-              <th>Teacher Name</th>
-              <th>Email Address</th>
-              <th>Total Assigned Students</th>
-            </tr>
-          </thead>
-          
-          <tbody id="students_per_teacher">
-            <%= render "students_per_teacher",
-            teachers: @students_per_teacher %>
-         
-          </tbody>
-        </table>
-      </div>
-    </div>
-
+    <%= render "admin_dashboard" %>
   <% else %>
-
-    
-    <div class="stats-grid">
-      <div class="stat-card students-stat">
-       
-        <div class="stat-content">
-          <h3><%= @total_students %></h3>
-          <p>My Total Students</p>
-        </div>
-      </div>
-    </div>
+    <%= render "teacher_dashboard" %>
+  <% end %>
 
   
-    <div class="dashboard-box-card">
-      <div class="card-header">
-        <h2>Students count by Course</h2>
-        <span class="badge">Academics</span>
-      </div>
-      <div class="card-body">
-        <table class="dashboard-table">
-          <thead>
-            <tr>
-              <th>Course Subject</th>
-              <th>Total Students enrolled</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @course_counts.each do |course, count| %>
-              <tr>
-                <td>
-                  <span class="course-cell">
-                    <span class="course-dot"></span>
-                    <strong><%= course %></strong>
-                  </span>
-                </td>
-                <td>
-                  <span class="count-badge"><%= count %></span>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  <% end %>
 </div>

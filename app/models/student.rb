@@ -6,33 +6,29 @@ class Student < ApplicationRecord
   after_create :send_welcome_email
   after_commit :send_teacher_assignment_emails, on: [ :create, :update ], if: -> { saved_change_to_teacher_id? && teacher_id.present? }
   after_commit :send_marks_published_email, on: :update, if: :saved_change_to_marks?
-  scope :search, ->(term) {
+  scope :search, ->(term) do
+    escaped_term = ActiveRecord::Base.sanitize_sql_like(term)
     where(
-      "name LIKE :search OR email LIKE :search",
-      search: "%#{term}%"
+      "name LIKE :term OR email LIKE :term",
+      term: "%#{escaped_term}%"
     )
-  }
+  end
 
   scope :by_course, ->(course) {
     where(course: course)
   }
+  GRADE_RANGES={
+    "A" => 80..100,
+    "B" => 60...80,
+    "C" => 40...60,
+    "D" => 35...40,
+    "F" => 0...35
+}.freeze
+scope :by_grade, ->(grade) do
+  range = GRADE_RANGES[grade.to_s.upcase]
+  range ? where(marks: range) : all
+end
 
-  scope :by_grade, ->(grade) {
-    case grade.to_s.upcase
-    when "A"
-      where("marks >= 80")
-    when "B"
-      where("marks >= 60 AND marks < 80")
-    when "C"
-      where("marks >= 40 AND marks < 60")
-    when "D"
-      where("marks >= 35 AND marks < 40")
-    when "F"
-      where("marks < 35")
-    else
-      all
-    end
-  }
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true
@@ -41,6 +37,10 @@ class Student < ApplicationRecord
   validates :city, presence: true
   validate :validate_profile_photo
   validate :validate_documents
+  validates :marks,
+            presence: true,
+            numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100
+          }
   private
 
   def validate_profile_photo
@@ -53,20 +53,6 @@ class Student < ApplicationRecord
 
     end
   end
-
-  def send_welcome_email
-    StudentMailer.welcome_email(self).deliver_later
-  end
-
-  def send_teacher_assignment_emails
-    StudentMailer.teacher_assigned(self).deliver_later
-    TeacherMailer.new_student(self).deliver_later
-  end
-
-  def send_marks_published_email
-    StudentMailer.marks_published(self).deliver_later if marks.present?
-  end
-
   def validate_documents
     return unless documents.attached?
     documents.each do |document|
@@ -82,27 +68,16 @@ class Student < ApplicationRecord
   public
 
   def result
-    return "pass" if marks.present? && marks >= 35
-    return "fail" if marks.present?
-
-    "N/A"
+    return "N/A" if marks.blank?
+    grade == "F" ? "fail" : "pass"
   end
 
 
 
 
   def grade
-    return "N/A" unless marks.present?
-    if marks >= 80
-      "A"
-    elsif marks >= 60
-      "B"
-    elsif marks >= 40
-      "C"
-    elsif marks >= 35
-      "D"
-    else
-      "F"
-    end
+    return "N/A" if marks.blank?
+
+    GRADE_RANGES.find { |_, range| range.cover?(marks) }&.first || "N/A"
   end
 end

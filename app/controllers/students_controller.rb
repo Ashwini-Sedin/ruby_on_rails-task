@@ -121,9 +121,11 @@ class StudentsController < ApplicationController
   end
 
   def student_params
+    
     permitted = [ :name, :email, :age, :course, :city, :marks, :profile_photo, { documents: [] } ]
     permitted << :teacher_id if current_user.admin?
 
     params.require(:student).permit(permitted)
   end
 end
+
