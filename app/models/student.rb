@@ -2,6 +2,11 @@ class Student < ApplicationRecord
   belongs_to :teacher, class_name: "User", foreign_key: :teacher_id, counter_cache: true
   has_one_attached :profile_photo
   has_many_attached :documents
+  has_one_attached :report_card
+  after_create :send_welcome_email
+  after_commit :send_teacher_assignment_emails, on: [ :create, :update ], if: -> { saved_change_to_teacher_id? && teacher_id.present? }
+
+  after_commit :send_marks_published_email, on: :update, if: :saved_change_to_marks?
   scope :search, ->(term) do
     escaped_term = ActiveRecord::Base.sanitize_sql_like(term)
     where(
@@ -39,6 +44,9 @@ end
           }
   private
 
+
+
+
   def validate_profile_photo
     return unless profile_photo.attached?
     unless profile_photo.content_type.in?(%w[image/jpeg image/png image/jpg])
@@ -67,6 +75,9 @@ end
     return "N/A" if marks.blank?
     grade == "F" ? "fail" : "pass"
   end
+
+
+
 
   def grade
     return "N/A" if marks.blank?

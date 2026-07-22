@@ -1,0 +1,34 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+
+    container_name: student_management
+
+    ports:
+      - "3000:3000"
+
+    volumes:
+      - .:/rails
+      - bundle_data:/usr/local/bundle
+
+    stdin_open: true
+    tty: true
+
+    environment:
+      RAILS_ENV: development
+      REDIS_URL: redis://redis:6379
+
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    container_name: student_management_redis
+
+    ports:
+      - "6379:6379"
+
+volumes:
+  bundle_data:
