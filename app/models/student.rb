@@ -5,6 +5,7 @@ class Student < ApplicationRecord
   has_one_attached :report_card
   after_create :send_welcome_email
   after_commit :send_teacher_assignment_emails, on: [ :create, :update ], if: -> { saved_change_to_teacher_id? && teacher_id.present? }
+
   after_commit :send_marks_published_email, on: :update, if: :saved_change_to_marks?
   scope :search, ->(term) do
     escaped_term = ActiveRecord::Base.sanitize_sql_like(term)
@@ -42,6 +43,9 @@ end
             numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100
           }
   private
+
+
+
 
   def validate_profile_photo
     return unless profile_photo.attached?
