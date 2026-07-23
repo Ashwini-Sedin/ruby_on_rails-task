@@ -12,15 +12,13 @@
 
 
 <body>
-  <% flash.each do |type, message| %>
-  <% if message.present? %>
-    <div class="flash <%= type %>">
-      <%= message %>
-    </div>
-  <% end %>
-  <% end %>
+
 
   <%= render "shared/header" %>
+ 
+  <div id="flash">
+    <%= render "layouts/flash" %>
+  </div>
 
   <div class="container">
     <%= yield %>

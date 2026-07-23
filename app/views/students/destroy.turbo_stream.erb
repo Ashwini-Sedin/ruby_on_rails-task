@@ -1,0 +1,14 @@
+<%= turbo_stream.remove dom_id(@student) %>
+
+<%= turbo_stream.update "flash" do %>
+  <%= render "layouts/flash" %>
+<% end %>
+
+<%= turbo_stream.update "student_count" do %>
+  Total Students: <%= current_user.admin? ? Student.count : current_user.students.count %>
+<% end %>
+
+<%= turbo_stream.replace "students_per_teacher" do %>
+  <%= render "dashboard/students_per_teacher",
+      teachers: User.teacher.includes(:students) %>
+<% end %>

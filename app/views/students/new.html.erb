@@ -1,2 +1,4 @@
-<h2>Add Student</h2>
-<%= render "form" %>
+<%= turbo_frame_tag "new_student_form" do %>
+  <h2>Add Student</h2>
+  <%= render "form" %>
+<% end %>

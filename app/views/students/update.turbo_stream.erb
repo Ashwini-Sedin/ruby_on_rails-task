@@ -1,0 +1,14 @@
+<%= turbo_stream.replace dom_id(@student),
+      partial: "students/student",
+      locals: { student: @student } %>
+
+<%= turbo_stream.update "flash" do %>
+  <%= render "layouts/flash" %>
+<% end %>
+
+<%= turbo_stream.update "edit_student", "" %>
+
+<%= turbo_stream.replace "students_per_teacher" do %>
+  <%= render "dashboard/students_per_teacher",
+      teachers: User.teacher.includes(:students) %>
+<% end %>

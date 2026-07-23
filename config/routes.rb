@@ -1,8 +1,15 @@
 Rails.application.routes.draw do
    devise_for :users
-
-
-  resources :students
+  resources :students do
+    member do
+      post :generate_report_card
+      delete :remove_profile_photo
+      delete :remove_document
+    end
+    collection do
+       post :send_all_report_cards
+    end
+  end
   resources :users, only: [ :index ]
   get "dashboard", to: "dashboard#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
