@@ -43,9 +43,19 @@ end
             numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100
           }
   private
+ 
+  def send_welcome_email
+    StudentMailer.welcome_email(self).deliver_later
+  end 
 
+  
+  def send_teacher_assignment_emails
+    StudentMailer.teacher_assigned(self).deliver_later
+  end
 
-
+  def send_marks_published_email
+    StudentMailer.marks_published(self).deliver_later
+  end
 
   def validate_profile_photo
     return unless profile_photo.attached?

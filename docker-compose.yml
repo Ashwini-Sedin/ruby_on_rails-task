@@ -1,3 +1,4 @@
+
 services:
   web:
     build:
@@ -5,6 +6,8 @@ services:
       dockerfile: Dockerfile.dev
 
     container_name: student_management
+
+    command: bundle exec rails server -b 0.0.0.0 -p 3000
 
     ports:
       - "3000:3000"
@@ -18,17 +21,83 @@ services:
 
     environment:
       RAILS_ENV: development
+
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: Postgres@123
+
       REDIS_URL: redis://redis:6379
 
     depends_on:
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+
+  db:
+    image: postgres:16
+
+    container_name: student_management_db
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Postgres@123
+      POSTGRES_DB: student_management_development
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    ports:
+      - "5432:5432"
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U postgres
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
 
   redis:
     image: redis:7-alpine
+
     container_name: student_management_redis
 
     ports:
       - "6379:6379"
 
+  sidekiq:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+
+    container_name: student_management_sidekiq
+
+    command: bundle exec sidekiq
+
+    environment:
+      RAILS_ENV: development
+
+      REDIS_URL: redis://redis:6379
+
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: Postgres@123
+
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started 
+
 volumes:
   bundle_data:
+  postgres_data:
+
+
+
+  
