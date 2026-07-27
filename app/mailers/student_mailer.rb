@@ -1,6 +1,6 @@
 
 class StudentMailer < ApplicationMailer
-  default from: "kannanash31@gmail.com"
+  default from: "onboarding@resend.dev"
 
   def welcome_email(student)
     @student = student

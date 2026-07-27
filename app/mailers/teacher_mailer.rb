@@ -1,5 +1,5 @@
 class TeacherMailer < ApplicationMailer
- default from: "kannanash31@gmail.com"
+ default from: "onboarding@resend.dev"
 
  def new_student(student)
     set_variables(student)
