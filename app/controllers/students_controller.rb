@@ -9,9 +9,11 @@ class StudentsController < ApplicationController
       else
         current_user.students
       end
-
+    Rails.logger.info "PARAMS: #{params.inspect}"
+    Rails.logger.info "BEFORE: #{@students.pluck(:name, :course).inspect}"
     @students = @students.search(params[:search]) if params[:search].present?
     @students = @students.by_course(params[:course]) if params[:course].present?
+     Rails.logger.info "AFTER: #{@students.pluck(:name, :course).inspect}"
     respond_to do |format|
       format.html
       format.turbo_stream
