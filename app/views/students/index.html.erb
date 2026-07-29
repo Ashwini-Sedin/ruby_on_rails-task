@@ -4,7 +4,7 @@
 
   <%= form_with url: students_path,
                 method: :get,
-                data: { turbo_frame: "students_table" } do %>
+                data: { turbo: false } do %>
 
     <%= text_field_tag :search,
         params[:search],
