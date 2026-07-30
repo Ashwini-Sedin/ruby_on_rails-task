@@ -8,6 +8,9 @@
 <% end %>
 
 
+<%= turbo_stream.update "new_student_form", "" %>
+
+
 <%= turbo_stream.update "student_count" do %>
   Total Students:
   <%= current_user.admin? ? Student.count : current_user.students.count %>

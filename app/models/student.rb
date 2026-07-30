@@ -10,7 +10,7 @@ class Student < ApplicationRecord
   scope :search, ->(term) do
     escaped_term = ActiveRecord::Base.sanitize_sql_like(term)
     where(
-      "name LIKE :term OR email LIKE :term",
+     "LOWER(name) LIKE LOWER(:term) OR LOWER(email) LIKE LOWER(:term)",
       term: "%#{escaped_term}%"
     )
   end
@@ -32,7 +32,7 @@ end
 
 
   validates :name, presence: true
-  validates :email, presence: true, uniqueness: true
+  validates :email, presence: true, uniqueness: {case_sensitive: false, message: "has already been registered as a student"}
   validates :age, numericality: { greater_than: 0 }
   validates :course, presence: true
   validates :city, presence: true
@@ -43,6 +43,12 @@ end
             numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100
           }
   private
+
+
+  
+  def downcase_email
+    self.email = email.to_s.downcase.strip if email.present?
+  end
  
   def send_welcome_email
     StudentMailer.welcome_email(self).deliver_later

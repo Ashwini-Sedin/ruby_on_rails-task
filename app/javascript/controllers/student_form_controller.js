@@ -39,6 +39,6 @@ export default class extends Controller {
       })
     }
 
-    this.submitTarget.disabled = !isValid
+    this.submitTarget.disabled = false
   }
 }
