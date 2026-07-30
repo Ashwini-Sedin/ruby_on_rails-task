@@ -1,0 +1,11 @@
+<%= turbo_stream.replace "students_table" do %>
+  <%= turbo_frame_tag "students_table" do %>
+    <%= render "students_table" %>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.replace "student_count" do %>
+  <div id="student_count">
+    Total Students: <%= @students.count %>
+  </div>
+<% end %>

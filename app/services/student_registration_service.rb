@@ -16,6 +16,7 @@ class StudentRegistrationService
     else
       {
         success: false,
+        student: student,
         errors: student.errors.full_messages
       }
     end

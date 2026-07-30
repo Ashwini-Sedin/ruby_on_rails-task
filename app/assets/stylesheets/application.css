@@ -163,6 +163,12 @@ body {
   transition: color 0.2s;
 }
 
+
+.students-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .nav-link:hover {
   color: #38bdf8;
 }

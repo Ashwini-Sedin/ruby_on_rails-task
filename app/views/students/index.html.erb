@@ -1,10 +1,17 @@
 <h2>Students List</h2>
 
+<% if current_user.admin? || current_user.teacher? %>
+  <%= link_to "Add Student",
+      new_student_path,
+      class: "btn btn-primary" %>
+<% end %>
+
+
 <div class="search-filter">
 
   <%= form_with url: students_path,
                 method: :get,
-                data: { turbo: false } do %>
+                data: { turbo_frame: "students_table" } do %>
 
     <%= text_field_tag :search,
         params[:search],

@@ -9,11 +9,10 @@ class StudentsController < ApplicationController
       else
         current_user.students
       end
-    Rails.logger.info "PARAMS: #{params.inspect}"
-    Rails.logger.info "BEFORE: #{@students.pluck(:name, :course).inspect}"
+    
     @students = @students.search(params[:search]) if params[:search].present?
     @students = @students.by_course(params[:course]) if params[:course].present?
-     Rails.logger.info "AFTER: #{@students.pluck(:name, :course).inspect}"
+    
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -45,8 +44,7 @@ class StudentsController < ApplicationController
         format.html { redirect_to students_path, notice: "Student created successfully." }
       end
     else
-      @student = Student.new(student_params)
-      @student.errors.add(:base, result[:errors].join(", "))
+      @student = result[:student]
       render :new, status: :unprocessable_entity
     end
   end
