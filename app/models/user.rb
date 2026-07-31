@@ -22,10 +22,16 @@ class User < ApplicationRecord
        jwt_revocation_strategy: Devise::JWT::RevocationStrategies::Null
 
   has_many :students, foreign_key: :teacher_id, dependent: :destroy
+  before_validation :set_defaults, on: :create
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true
 
   def subject
     students.distinct.pick(:course) || "Mathematics"
+  end
+  private 
+    def set_defaults
+    self.role ||= "teacher"
+    self.name ||= email.split("@").first.titleize if email.present?
   end
 end

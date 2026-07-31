@@ -5,7 +5,7 @@ export default class extends Controller {
     // Automatically dismiss the popup after 15 seconds (15000ms)
     this.timeout = setTimeout(() => {
       this.dismiss()
-    }, 15000)
+    }, 1500)
   }
 
   disconnect() {
