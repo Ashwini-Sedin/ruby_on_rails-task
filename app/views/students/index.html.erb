@@ -1,16 +1,15 @@
 <h2>Students List</h2>
 
-<div class="search-filter">
-
+<div class="search-filter" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
   <%= form_with url: students_path,
                 method: :get,
-                data: { turbo_frame: "students_table" } do %>
+                data: { turbo_frame: "students_table" },
+                style: "display: flex; align-items: center; gap: 12px;" do %>
 
     <%= text_field_tag :search,
         params[:search],
         placeholder: "Search students...",
         oninput: "this.form.requestSubmit()" %>
-
 
     <%= select_tag :course,
         options_for_select(
@@ -19,25 +18,26 @@
         ),
         include_blank: "All courses" %>
 
-
     <%= submit_tag "Filter" %>
-
   <% end %>
 
+  <% if current_user.admin? || current_user.teacher? %>
+    <%= link_to "Add Student",
+        new_student_path,
+        class: "btn btn-primary",
+        data: { turbo_frame: "new_student_form" } %>
+  <% end %>
 </div>
 
-
 <br>
-
 
 <div id="student_count">
   Total Students: <%= @students.count %>
 </div>
 
-
+<!-- Inline Form Frame -->
 <%= turbo_frame_tag "new_student_form" %>
 <%= turbo_frame_tag "edit_student" %>
-
 
 <%= turbo_frame_tag "students_table" do %>
   <%= render "students_table" %>
