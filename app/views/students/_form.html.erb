@@ -150,8 +150,12 @@
     <% end %>
 
     <br>
-
+    <div class="form-actions">
     <%= f.submit class: "btn btn-primary", data: { disable_with: "Submitting...", student_form_target: "submit" } %>
+    <%= link_to "Back", (@student.persisted? ? student_path(@student) : students_path), 
+              data: { turbo_frame: "_top" }, 
+              class: "btn btn-secondary" %>
+    </div>
     
   <% end %>
 </div>

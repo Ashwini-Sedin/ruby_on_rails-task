@@ -27,7 +27,7 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true
 
   def subject
-    students.distinct.pick(:course) || "Mathematics"
+    students.distinct.pick(:course) || "Not Assigned"
   end
   private 
     def set_defaults

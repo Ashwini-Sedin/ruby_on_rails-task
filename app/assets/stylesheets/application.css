@@ -279,6 +279,28 @@ body {
   overflow: hidden;
   margin-bottom: 30px;
 }
+/* Form Action Buttons Container */
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* Secondary / Back Button */
+.btn-secondary {
+  background-color: #6c757d;
+  color: #ffffff;
+  border: none;
+  display: inline-block;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  color: #ffffff;
+}
 
 .card-header {
   padding: 20px 24px;

@@ -5,11 +5,14 @@ module Api
 
       def index
         students = Student.all
-        if params[:name].present?
-          search= ActiveRecord::Base.sanitize_sql_like(params[:name])
+
+        students = students.where(teacher_id: params[:teacher_id]) if params[:teacher_id].present?
+        search_term = params[:name].presence || params[:search].presence
+        if search_term.present?
+          term = ActiveRecord::Base.sanitize_sql_like(search_term.to_s.strip)
           students = students.where(
-            "name LIKE ?",
-            "%#{search}%"
+            "LOWER(name) LIKE LOWER(:term) OR LOWER(email) LIKE LOWER(:term)",
+            term: "%#{term}%"
           )
         end
 
@@ -24,9 +27,15 @@ module Api
       end
 
       def create
-        student = Student.new(student_params)
+        teacher_id = params[:teacher_id].presence || student_params[:teacher_id]
+        student = Student.new(student_params.except(:profile_photo, :documents).merge(teacher_id: teacher_id))
 
         if student.save
+          if params[:student].present?
+            ProfilePhotoService.upload(student, params[:student][:profile_photo]) if params[:student][:profile_photo].present?
+            StudentDocumentService.upload(student, params[:student][:documents]) if params[:student][:documents].present?
+          end
+
           render json: student_json(student),
                  status: :created
         else
@@ -35,7 +44,12 @@ module Api
       end
 
       def update
-        if @student.update(student_params)
+        if @student.update(student_params.except(:profile_photo, :documents))
+          if params[:student].present?
+            ProfilePhotoService.upload(@student, params[:student][:profile_photo]) if params[:student][:profile_photo].present?
+            StudentDocumentService.upload(@student, params[:student][:documents]) if params[:student][:documents].present?
+          end
+
           render json: student_json(@student)
         else
           render_validation_errors(@student)
@@ -61,7 +75,6 @@ module Api
          }, status: :unprocessable_entity
       end
 
-
       def student_params
         params.require(:student).permit(
           :name,
@@ -70,10 +83,11 @@ module Api
           :course,
           :city,
           :marks,
-          :teacher_id
+          :teacher_id,
+          :profile_photo,
+          { documents: [] }
         )
       end
-
       def student_json(student)
         {
           id: student.id,
@@ -84,9 +98,27 @@ module Api
           city: student.city,
           marks: student.marks,
           grade: student.grade,
-          teacher_id: student.teacher_id
+          teacher_id: student.teacher_id,
+          documents: student.documents.map do |doc|
+            {
+              id: doc.id,
+              blob_id: doc.blob_id,
+              filename: doc.filename.to_s,
+              content_type: doc.content_type,
+              byte_size: doc.byte_size,
+              url: Rails.application.routes.url_helpers.rails_blob_url(doc, only_path: true)
+            }
+          end,
+          teacher: student.teacher ? {
+            id: student.teacher.id,
+            name: student.teacher.name,
+            email: student.teacher.email
+          } : nil
         }
       end
     end
   end
 end
+
+
+      

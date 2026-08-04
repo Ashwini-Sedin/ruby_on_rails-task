@@ -1,5 +1,6 @@
 class Student < ApplicationRecord
-  belongs_to :teacher, class_name: "User", foreign_key: :teacher_id, counter_cache: true
+  belongs_to :teacher, -> { where(role: "teacher") }, class_name: "User", foreign_key: :teacher_id, counter_cache: true
+  before_validation :downcase_email
   has_one_attached :profile_photo
   has_many_attached :documents
   has_one_attached :report_card
@@ -16,8 +17,9 @@ class Student < ApplicationRecord
   end
 
   scope :by_course, ->(course) {
-    where(course: course)
+    where("LOWER(TRIM(course)) = LOWER(?)", course.to_s.strip) if course.present?
   }
+
   GRADE_RANGES={
     "A" => 80..100,
     "B" => 60...80,
@@ -27,7 +29,7 @@ class Student < ApplicationRecord
 }.freeze
 scope :by_grade, ->(grade) do
   range = GRADE_RANGES[grade.to_s.upcase]
-  range ? where(marks: range) : all
+  range ? where(marks: range) : none
 end
 
 
@@ -42,9 +44,16 @@ end
             presence: true,
             numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100
           }
-  private
+ validate :must_be_assigned_to_a_teacher       
+ 
 
+ private
 
+ def must_be_assigned_to_a_teacher
+    if teacher_id.blank? || teacher.nil?
+      errors.add(:teacher_id, "must belong to a valid user with the teacher role")
+    end
+  end
   
   def downcase_email
     self.email = email.to_s.downcase.strip if email.present?
