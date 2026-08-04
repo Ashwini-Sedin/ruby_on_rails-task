@@ -34,7 +34,7 @@ end
 
 
   validates :name, presence: true
-  validates :email, presence: true, uniqueness: {case_sensitive: false, message: "has already been registered as a student"}
+  validates :email, presence: true, uniqueness: true
   validates :age, numericality: { greater_than: 0 }
   validates :course, presence: true
   validates :city, presence: true

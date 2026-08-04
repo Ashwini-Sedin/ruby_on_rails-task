@@ -4,7 +4,12 @@ module Api
       before_action :set_student, only: [ :show, :update, :destroy ]
 
       def index
-        students = Student.all
+        students=
+         if current_user.admin?
+          Student.all
+         else
+           current_user.students
+         end
 
         students = students.where(teacher_id: params[:teacher_id]) if params[:teacher_id].present?
         search_term = params[:name].presence || params[:search].presence

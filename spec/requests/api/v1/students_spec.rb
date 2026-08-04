@@ -13,13 +13,22 @@ RSpec.describe "API::V1::Students", type: :request do
     )
   end
 
-  before do
+ before do
     sign_in teacher
-  end
+
+   puts "Students:"
+   p Student.pluck(:id, :name, :teacher_id)
+
+   puts "Teachers:"
+   p User.teacher.pluck(:id, :name)
+ end
 
   describe "GET /index" do
     it "returns all students" do
       get api_v1_students_path
+      puts "Response"
+      puts response.body
+      
 
       expect(response).to have_http_status(:ok)
 
@@ -79,25 +88,28 @@ RSpec.describe "API::V1::Students", type: :request do
         teacher_id: teacher.id
       }
     end
-
     it "creates a student" do
-      expect {
-        post api_v1_students_path, params: valid_params
-      }.to change(Student, :count).by(1)
+  expect {
+    post api_v1_students_path,
+         params: { student: valid_params }
+  }.to change(Student, :count).by(1)
 
-      expect(response).to have_http_status(:created)
+  expect(response).to have_http_status(:created)
 
-      json = JSON.parse(response.body)
+  json = JSON.parse(response.body)
 
-      expect(json["name"]).to eq("Kannan")
-    end
+  expect(json["name"]).to eq("Kannan")
+end
+   
 
     it "returns errors for invalid params" do
-      post api_v1_students_path,
-           params: {
-             name: "",
-             email: ""
-           }
+       post api_v1_students_path,
+     params: {
+       student: {
+         name: "",
+         email: ""
+       }
+     }
 
       expect(response).to have_http_status(:unprocessable_entity)
 
@@ -111,8 +123,10 @@ RSpec.describe "API::V1::Students", type: :request do
     it "updates the student" do
       patch api_v1_student_path(student),
             params: {
+              student:{
               name: "Updated Name"
             }
+          }
 
       expect(response).to have_http_status(:ok)
 

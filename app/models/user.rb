@@ -27,11 +27,10 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true
 
   def subject
-    students.distinct.pick(:course) || "Not Assigned"
+    students.distinct.pick(:course) || "Mathematics"
   end
   private 
     def set_defaults
-    self.role ||= "teacher"
-    self.name ||= email.split("@").first.titleize if email.present?
+      self.role ||= "teacher"
   end
 end

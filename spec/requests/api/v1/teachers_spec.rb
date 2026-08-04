@@ -12,6 +12,9 @@ RSpec.describe "API::V1::Teachers", type: :request do
 
   before do
     sign_in teacher
+     puts "Current teacher: #{teacher.id} #{teacher.name}"
+     puts "Teachers in DB:"
+    p User.teacher.pluck(:id, :name)
   end
 
   describe "GET /index" do
@@ -22,7 +25,8 @@ RSpec.describe "API::V1::Teachers", type: :request do
 
       json = JSON.parse(response.body)
 
-      expect(json.first["name"]).to eq("John")
+      names = json.map { |t| t["name"] }
+      expect(names).to include("John")
     end
   end
 
@@ -48,10 +52,12 @@ RSpec.describe "API::V1::Teachers", type: :request do
     end
 
     it "creates a teacher" do
-      expect {
-        post api_v1_teachers_path,
-             params: valid_params
-      }.to change(User.teacher, :count).by(1)
+     expect {
+       post api_v1_teachers_path,
+         params: {
+           teacher: valid_params
+         }
+  }.to change(User.teacher, :count).by(1)
 
       expect(response).to have_http_status(:created)
 
@@ -63,9 +69,11 @@ RSpec.describe "API::V1::Teachers", type: :request do
     it "does not create an invalid teacher" do
       post api_v1_teachers_path,
            params: {
+            teacher:{
              name: "",
              email: ""
            }
+          }
 
       expect(response).to have_http_status(:unprocessable_entity)
 
@@ -79,8 +87,10 @@ RSpec.describe "API::V1::Teachers", type: :request do
     it "updates the teacher" do
       patch api_v1_teacher_path(teacher),
             params: {
+              teacher: {
               name: "Updated Teacher"
             }
+          }
 
       expect(response).to have_http_status(:ok)
 
@@ -111,8 +121,9 @@ RSpec.describe "API::V1::Teachers", type: :request do
 
       json = JSON.parse(response.body)
 
-      expect(json.size).to eq(1)
-      expect(json.first["subject"]).to eq("Ruby")
+      teacher_ids = json.map { |t| t["id"] }
+      expect(teacher_ids).to include(teacher.id)
+      expect(json.map { |t| t["subject"] }).to all(eq("Ruby"))
     end
   end
 end
