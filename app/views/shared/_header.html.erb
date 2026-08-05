@@ -8,8 +8,9 @@
         <% if user_signed_in? %>
           <%= link_to "Dashboard", dashboard_path %>
           <%= link_to "Students List", students_path %>
-          <%= link_to "Add Student", new_student_path %>
-
+           <!-- Full Page Add Student link -->
+            <%= link_to "Add Student", new_student_path %>
+        
           <% if current_user.admin? %>
             <%= link_to "Teachers", users_path(role: "teacher") %>
           <% end %>

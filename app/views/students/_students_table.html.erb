@@ -1,0 +1,18 @@
+<table border="1">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Age</th>
+      <th>Course</th>
+      <th>City</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody id="students">
+    <% @students.each do |student| %>
+      <%= render "student", student: student %>
+    <% end %>
+  </tbody>
+</table>

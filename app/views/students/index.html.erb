@@ -1,62 +1,44 @@
 <h2>Students List</h2>
 
-<div class="search-filter">
+<div class="search-filter" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+  <%= form_with url: students_path,
+                method: :get,
+                data: { turbo_frame: "students_table" },
+                style: "display: flex; align-items: center; gap: 12px;" do %>
 
-<%= form_with url: students_path,
-method: :get,
-local: true do %>
-<%= text_field_tag :search,
-  
-  params[:search],
-  placeholder:"Search"%>
-  <%= select_tag :course,
-  options_for_select(
-    ["Ruby","Rails","React","Java"],
-    params[:course]
-  ),
-  include_blank:"All courses"%>
-  <%= submit_tag "Filter"%>
-<% end %>
+    <%= text_field_tag :search,
+        params[:search],
+        placeholder: "Search students...",
+        oninput: "this.form.requestSubmit()" %>
+
+    <%= select_tag :course,
+        options_for_select(
+          ["Ruby", "Rails", "React", "Java"],
+          params[:course]
+        ),
+        include_blank: "All courses" %>
+
+    <%= submit_tag "Filter" %>
+  <% end %>
+
+  <% if current_user.admin? || current_user.teacher? %>
+    <%= link_to "Add Student",
+        new_student_path,
+        class: "btn btn-primary",
+        data: { turbo_frame: "new_student_form" } %>
+  <% end %>
+</div>
 
 <br>
-<table border="1">
 
-<tr>
-  <th>Name</th>
-  <th>Email</th>
-  <th>Age</th>
-  <th>Course</th>
-  <th>City</th>
-  <th>Actions</th>
-</tr>
+<div id="student_count">
+  Total Students: <%= @students.count %>
+</div>
 
-<% @students.each do |student| %>
+<!-- Inline Form Frame -->
+<%= turbo_frame_tag "new_student_form" %>
+<%= turbo_frame_tag "edit_student" %>
 
-<tr>
-  <td><%= student.name %></td>
-  <td><%= student.email %></td>
-  <td><%= student.age %></td>
-  <td><%= student.course %></td>
-  <td><%= student.city %></td>
-
-  <td>
-    <%= link_to "View", student %>
-
-    <%= link_to "Edit",
-        edit_student_path(student) %>
-    
-    <%= link_to "Delete",
-            student_path(student),
-            data: {
-              turbo_method: :delete,
-              turbo_confirm: "Are you sure?"
-            } %>
-    
-  </td>
-</tr>
-
+<%= turbo_frame_tag "students_table" do %>
+  <%= render "students_table" %>
 <% end %>
-
-</table>
-  
-  

@@ -1,0 +1,24 @@
+<% teachers.each do |teacher| %>
+
+<tr>
+  <td>
+    <span class="teacher-name-cell">
+      <span class="avatar">
+        <%= teacher.name[0].upcase %>
+      </span>
+      <%= teacher.name %>
+    </span>
+  </td>
+
+  <td class="email-cell">
+    <%= teacher.email %>
+  </td>
+
+  <td>
+    <span class="count-badge">
+      <%= teacher.students_count %>
+    </span>
+  </td>
+</tr>
+
+<% end %>
